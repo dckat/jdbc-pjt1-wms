@@ -1,11 +1,24 @@
-package com.example.dao;
+package com.example.Project1.Frame;
 
-import com.example.login.Login;
+import com.example.Project1.DAO.DatabaseConnection;
+import com.example.Project1.DAO.DatabaseConnection;
+import com.example.Project1.Login.LoginUI;
 
 import javax.swing.*;
+import java.sql.*;
 
 public class signUp {
+    JFrame frame = new JFrame();
+    Connection conn = DatabaseConnection.connect();
+
+    public static void run () {
+        DatabaseConnection.connect();
+
+    }
+
+
     public signUp() {
+
         // 메인 프레임 생성
         JFrame signUpFrame = new JFrame("회원가입");
         signUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,16 +81,31 @@ public class signUp {
         // 중복 확인 로직
         checkIdButton.addActionListener(e -> {
             String id = idField.getText();
-            if (id.length() <= 5) { // 예제 중복 ID 검사 (실제로는 DB 연동 필요)
-                JOptionPane.showMessageDialog(signUpFrame, "ID는 5글자 이상이어야 합니다.");
-            } else if ((id.contains("a"))) {
-                JOptionPane.showMessageDialog(signUpFrame, "이미 사용 중인 ID입니다.");
-            } else if (!id.contains("a")) {
-                JOptionPane.showMessageDialog(signUpFrame, "사용 가능한 ID입니다.");
+            run();
+            String sql = "SELECT COUNT(*) FROM user WHERE id = ?";
+            try   {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                // PreparedStatement로 파라미터 바인딩
+                stmt.setString(1, id);
+
+                // 쿼리 실행 및 결과 확인
+                ResultSet rs = stmt.executeQuery();
+                if (id.length() < 5 ){
+                    JOptionPane.showMessageDialog(signUpFrame,"ID는 5글자 이상이어야 합니다.");
+                }
+                else if(rs.next() && rs.getInt(1) > 0) {
+                    JOptionPane.showMessageDialog(signUpFrame, "중복되는 아이디입니다.");
+                } else {
+                    JOptionPane.showMessageDialog(signUpFrame, "사용 가능한 아이디입니다.");
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(signUpFrame, "데이터베이스 연결 오류: " + ex.getMessage());
             }
         });
 
-        checkPwButton.addActionListener(e -> { //비밀번호 8자리 이상 구현 (+ 영문 숫자 혼합 구별 가능한가요...?)
+        checkPwButton.addActionListener(e -> { //비밀번호 6자리 이상 구현 (+ 영문 숫자 혼합 구별 가능한가요...?)
             String pw = pwField.getText();
             String confirmPw = confirmPwField.getText();
 
@@ -93,26 +121,40 @@ public class signUp {
 
         // 회원가입 버튼 로직
         signupButton.addActionListener(e -> {
-            String id = idField.getText();
-            String password = new String(pwField.getPassword());
-            String confirmPassword = new String(confirmPwField.getPassword());
-            String ssn = ssnField.getText();
-            String email = emailField.getText();
-            String phone = phoneField.getText();
-            String address = addressField.getText();
+                    String id = idField.getText();
+                    String password = new String(pwField.getPassword());
+                    String confirmPassword = new String(confirmPwField.getPassword());
+                    String name = new String(nameField.getText());
+                    String ssn = ssnField.getText();
+                    String email = emailField.getText();
+                    String phone = phoneField.getText();
+                    String address = addressField.getText();
 
-            if (id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || ssn.isEmpty() ||
-                    email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-                JOptionPane.showMessageDialog(signUpFrame, "모든 필드를 입력해주세요.");
-            } else if (!password.equals(confirmPassword)) {
-                JOptionPane.showMessageDialog(signUpFrame, "비밀번호가 일치하지 않습니다.");
-            } else {
-                JOptionPane.showMessageDialog(signUpFrame, "회원가입 성공!"); // 실제로는 DB 저장 로직 추가
-            }
-        });
+                    if (id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || ssn.isEmpty() ||
+                            email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+                        JOptionPane.showMessageDialog(signUpFrame, "모든 필드를 입력해주세요.");
+                    } else if (!password.equals(confirmPassword)) {
+                        JOptionPane.showMessageDialog(signUpFrame, "비밀번호가 일치하지 않습니다.");
+                    } else {
+                        run(); // db연동
+                        boolean isInserted = DatabaseConnection.insertUser(id, password, name, ssn, email, phone, address);
+                        if (isInserted) {
+                            JOptionPane.showMessageDialog(signUpFrame, "회원가입 성공!");
+                        } else {
+                            JOptionPane.showMessageDialog(signUpFrame, "회원가입 실패. 중복확인을 눌러 중복을 확인해주세요.");
+                        }
+                    }
+
+
+                }
+
+        );
 
         // 종료 버튼 로직
-        signupButton.addActionListener(e -> {new Login(); signUpFrame.setVisible(false);});
+        signupButton.addActionListener(e -> {
+            new LoginUI();
+            signUpFrame.setVisible(false);
+        });
         exitButton.addActionListener(e -> System.exit(0));
 
         // 프레임에 추가

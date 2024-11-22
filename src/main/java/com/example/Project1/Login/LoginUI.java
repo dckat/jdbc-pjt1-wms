@@ -1,20 +1,27 @@
-package com.example.login;
+package com.example.Project1.Login;
 
-import com.example.dao.findId;
-import com.example.dao.findPw;
-import com.example.dao.signUp;
+import com.example.Project1.DAO.*;
+import com.example.Project1.Frame.Inventory_admin;
+import com.example.Project1.Frame.findId;
+import com.example.Project1.Frame.findPw;
+import com.example.Project1.Frame.signUp;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class Login {
+public class LoginUI {
     private JLabel label;
     private JTextField textField;
     private JPasswordField passwordField;
     private JButton button;
+    Connection conn = DatabaseConnection.connect();
 
-    public Login() {
+    public LoginUI() {
         LoginUI();
     }
 
@@ -60,18 +67,46 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 String id = idField.getText();
                 String password = new String(pwField.getPassword());
-                // 로그인 검증 로직 (샘플)
-                if (id.equals("admin") && password.equals("1234")) {
-                    JOptionPane.showMessageDialog(frame, "로그인 성공!");
-                } else {
-                    JOptionPane.showMessageDialog(frame, "아이디 또는 비밀번호를 확인하세요.");
+
+
+                // SQL 쿼리 및 JDBC 연결
+                String sql = "SELECT COUNT(*) FROM user WHERE id = ? AND pw = ?";
+
+                try {
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    // PreparedStatement로 파라미터 바인딩
+                    stmt.setString(1, id);
+                    stmt.setString(2, password);
+
+                    // 쿼리 실행 및 결과 확인
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) == 1) {
+                        JOptionPane.showMessageDialog(frame, "로그인 성공!");
+                        new Inventory_admin();
+                        frame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "아이디 또는 비밀번호를 확인하세요.");
+                    }
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, "데이터베이스 연결 오류: " + ex.getMessage());
                 }
             }
         });
 
-        findIdButton.addActionListener(e -> {new findId(); frame.setVisible(false);});
-        findPwButton.addActionListener(e -> {new findPw(); frame.setVisible(false);});
-        signupButton.addActionListener(e -> {new signUp(); frame.setVisible(false);});
+        findIdButton.addActionListener(e -> {
+            new findId();
+            frame.setVisible(false);
+        });
+        findPwButton.addActionListener(e -> {
+            new findPw();
+            frame.setVisible(false);
+        });
+        signupButton.addActionListener(e -> {
+            new signUp();
+            frame.setVisible(false);
+        });
         exitButton.addActionListener(e -> System.exit(0));
 
         // 프레임에 컴포넌트 추가
