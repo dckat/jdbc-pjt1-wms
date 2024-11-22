@@ -140,6 +140,8 @@ public class signUp {
                         boolean isInserted = DatabaseConnection.insertUser(id, password, name, ssn, email, phone, address);
                         if (isInserted) {
                             JOptionPane.showMessageDialog(signUpFrame, "회원가입 성공!");
+                            new LoginUI();
+                            signUpFrame.setVisible(false);
                         } else {
                             JOptionPane.showMessageDialog(signUpFrame, "회원가입 실패. 중복확인을 눌러 중복을 확인해주세요.");
                         }
@@ -151,10 +153,6 @@ public class signUp {
         );
 
         // 종료 버튼 로직
-        signupButton.addActionListener(e -> {
-            new LoginUI();
-            signUpFrame.setVisible(false);
-        });
         exitButton.addActionListener(e -> System.exit(0));
 
         // 프레임에 추가
