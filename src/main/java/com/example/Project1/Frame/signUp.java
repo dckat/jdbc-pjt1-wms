@@ -11,7 +11,7 @@ public class signUp {
     JFrame frame = new JFrame();
     Connection conn = DatabaseConnection.connect();
 
-    public static void run () {
+    public static void run() {
         DatabaseConnection.connect();
 
     }
@@ -83,17 +83,16 @@ public class signUp {
             String id = idField.getText();
             run();
             String sql = "SELECT COUNT(*) FROM user WHERE id = ?";
-            try   {
+            try {
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 // PreparedStatement로 파라미터 바인딩
                 stmt.setString(1, id);
 
                 // 쿼리 실행 및 결과 확인
                 ResultSet rs = stmt.executeQuery();
-                if (id.length() < 5 ){
-                    JOptionPane.showMessageDialog(signUpFrame,"ID는 5글자 이상이어야 합니다.");
-                }
-                else if(rs.next() && rs.getInt(1) > 0) {
+                if (id.length() < 5) {
+                    JOptionPane.showMessageDialog(signUpFrame, "ID는 5글자 이상이어야 합니다.");
+                } else if (rs.next() && rs.getInt(1) > 0) {
                     JOptionPane.showMessageDialog(signUpFrame, "중복되는 아이디입니다.");
                 } else {
                     JOptionPane.showMessageDialog(signUpFrame, "사용 가능한 아이디입니다.");
