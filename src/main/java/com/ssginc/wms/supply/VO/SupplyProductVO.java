@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 
-public class SupplyProductVO {
+public class SupplyProductVO {  // KKH-04, KKH-05
     private int supply_id;
     private int product_id;
     private String product_name;
