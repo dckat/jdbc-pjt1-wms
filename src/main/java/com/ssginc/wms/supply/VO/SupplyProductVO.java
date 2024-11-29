@@ -1,4 +1,4 @@
-package com.ssginc.wms.supply;
+package com.ssginc.wms.supply.VO;
 
 import lombok.Getter;
 import lombok.Setter;
