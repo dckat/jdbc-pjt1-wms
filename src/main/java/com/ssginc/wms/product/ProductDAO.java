@@ -19,7 +19,7 @@ public class ProductDAO {
     public ArrayList<UserProductVO> listUserProduct() {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT product_id, product_name, " +
-                     "c.category_id category_id, category_name, order_price, product_amount\n" +
+                     "c.category_id category_id, category_name, ord_price, product_amount\n" +
                      "FROM product p\n" +
                      "INNER JOIN product_category c\n" +
                      "ON p.category_id = c.category_id")) {
@@ -31,7 +31,7 @@ public class ProductDAO {
                     vo.setProductName(rs.getString("product_name"));
                     vo.setCategoryCode(rs.getInt("category_id"));
                     vo.setCategoryName(rs.getString("category_name"));
-                    vo.setOrderPrice(rs.getInt("order_price"));
+                    vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setProductAmount(rs.getInt("product_amount"));
                     list.add(vo);
                 }
