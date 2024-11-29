@@ -94,19 +94,6 @@ public class UserProductUI extends JFrame {
         bottomPanel.add(orderButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        /* dckat/feat/order branch와 merge 후 연결
-        orderButton.addActionListener(e -> {
-            int row = productTable.getSelectedRow();
-            TableModel data = productTable.getModel();
-            new OrderUI("user1", row, data);
-        });
-
-        orderUIButton.addActionListener(e -> {
-            this.dispose();
-            new OrderProductUI("user1");
-        });
-        */
-
         // JFrame 표시
         setVisible(true);
     }
