@@ -14,6 +14,7 @@ public class ProductIncomeApplyVO {
     private int applyId;
     private int productId;
     private String productName;
+    private String categoryName;
     private String userId;
     private LocalDateTime applyTime;
     private Process applyStatus;
