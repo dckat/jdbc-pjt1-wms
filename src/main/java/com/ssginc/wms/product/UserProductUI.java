@@ -58,7 +58,7 @@ public class UserProductUI extends JFrame {
         // Center Panel
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품코드", "상품이름", "분류코드", "분류이름", "상품가격"});
+        categoryComboBox = new JComboBox<>(new String[]{"상품이름", "분류이름"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         filterPanel.add(categoryComboBox);
@@ -93,6 +93,20 @@ public class UserProductUI extends JFrame {
         bottomPanel.add(blabel);
         bottomPanel.add(orderButton);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        searchButton.addActionListener(e -> {
+            tableModel.setRowCount(0);
+            String selectedColumn = (String) categoryComboBox.getSelectedItem(); // 선택된 컬럼
+            String keyword = searchField.getText();
+
+            String searchColumn = switch (selectedColumn) {
+                case "상품이름" -> "product_name";
+                case "분류이름" -> "category_name";
+                default -> null;
+            };
+
+            ArrayList<UserProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
+        });
 
         // JFrame 표시
         setVisible(true);
