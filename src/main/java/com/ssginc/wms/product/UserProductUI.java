@@ -71,16 +71,7 @@ public class UserProductUI extends JFrame {
         productTable = new JTable(tableModel);
 
         ArrayList<UserProductVO> proList = dao.listUserProduct();
-        for (UserProductVO data: proList) {
-            Vector<Object> v = new Vector<>();
-            v.add(data.getProductId());
-            v.add(data.getProductName());
-            v.add(data.getCategoryCode());
-            v.add(data.getCategoryName());
-            v.add(data.getOrderPrice());
-            v.add(data.getProductAmount());
-            tableModel.addRow(v);
-        }
+        addElement(proList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
         centerPanel.add(tableScrollPane, BorderLayout.CENTER);
@@ -106,9 +97,23 @@ public class UserProductUI extends JFrame {
             };
 
             ArrayList<UserProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
+            addElement(filteredList);
         });
 
         // JFrame 표시
         setVisible(true);
+    }
+
+    public void addElement(ArrayList<UserProductVO> list) {
+        for (UserProductVO data: list) {
+            Vector<Object> v = new Vector<>();
+            v.add(data.getProductId());
+            v.add(data.getProductName());
+            v.add(data.getCategoryCode());
+            v.add(data.getCategoryName());
+            v.add(data.getOrderPrice());
+            v.add(data.getProductAmount());
+            tableModel.addRow(v);
+        }
     }
 }
