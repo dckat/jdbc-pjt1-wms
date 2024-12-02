@@ -109,7 +109,7 @@ public class OrdDAO {
         }
     }
 
-    public void deleteOrder(int[] ordId) {
+    public int deleteOrder(int[] ordId) {
         try {
             Connection con = dataSource.getConnection();
             try(PreparedStatement ps = con.prepareStatement("DELETE FROM ord WHERE ord_id = ?")) {
@@ -118,8 +118,9 @@ public class OrdDAO {
                     ps.setInt(1, ordId[i]);
                     ps.addBatch();
                 }
-                ps.executeBatch();
+                int[] row = ps.executeBatch();
                 con.commit();
+                return row.length;
             } catch (SQLException e) {
                 try {
                     con.rollback();
@@ -131,5 +132,6 @@ public class OrdDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return 0;
     }
 }
