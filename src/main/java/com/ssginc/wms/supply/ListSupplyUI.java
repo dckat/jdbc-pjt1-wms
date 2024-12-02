@@ -1,4 +1,4 @@
-package com.ssginc.wms.supply.UI;
+package com.ssginc.wms.supply;
 
 
 import com.ssginc.wms.hikari.HikariCPDataSource;
@@ -6,9 +6,10 @@ import com.ssginc.wms.hikari.HikariCPDataSource;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Vector;
+
 
 public class ListSupplyUI extends JFrame {
     private JTable productTable;
@@ -147,23 +148,11 @@ public class ListSupplyUI extends JFrame {
         });
 
         orderListButton.addActionListener(e -> {
-            new ListSupplyUI(id);  // 발주 내역 화면 열기
+            new com.ssginc.wms.supply.ListSupplyUI(id);  // 발주 내역 화면 열기
             this.dispose();
         });
         orderRegisterButton.addActionListener(e -> {
             new SupplyUI(id);  // 발주 등록 화면 열기
-            this.dispose();
-        });
-
-        invenUIButton.addActionListener(e -> {
-            new InventoryAdminFrame("admin");
-            this.dispose();
-        });
-        ioUIButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입출고 관리 버튼 클릭됨"));
-        incomeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입고신청 관리 버튼 클릭됨"));
-        ordButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "주문 관리 버튼 클릭됨"));
-        purordButton.addActionListener(e -> {
-            new ListSupplyUI(id);  // 새로운 UI 열기
             this.dispose();
         });
 
@@ -175,67 +164,25 @@ public class ListSupplyUI extends JFrame {
         setVisible(true);
     }
 
-
     public void loadProductData(String selectedColumn, String searchKeyword) {
+        SupplyDAO dao = new SupplyDAO();
         tableModel.setRowCount(0); // 기존 데이터 삭제
+        ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
 
-        // 콤보박스에서 선택한 값과 데이터베이스 컬럼명을 매핑
-        String columnName = switch (selectedColumn) {
-            case "발주 ID" -> "s.supply_id";
-            case "상품 ID" -> "p.product_id";
-            case "상품 이름" -> "p.product_name";
-            case "카테고리" -> "pc.category_name";
-            case "공급 가격" -> "p.supply_price";
-            case "발주 수량" -> "s.supply_amount";
-            case "발주 시간" -> "s.supply_time";
-            default -> null; // "전체" 또는 비정상적인 값일 경우
-        };
-
-        String query = "SELECT " +
-                "s.supply_id, " +
-                "p.product_id, " +
-                "p.product_name, " +
-                "pc.category_name, " +
-                "p.supply_price, " +
-                "s.supply_amount, " +
-                "s.supply_time " +
-                "FROM supply s " +
-                "JOIN product p ON s.product_id = p.product_id " +
-                "JOIN product_category pc ON p.category_id = pc.category_id ";
-
-        // 검색 조건 추가
-        if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += "WHERE " + columnName + " = ? ";
-        }
-
-        query += "ORDER BY s.supply_id DESC";
-
-        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            // 검색 조건이 있는 경우 파라미터 설정
-            if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-                stmt.setString(1, searchKeyword);
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    tableModel.addRow(new Object[]{
-                            rs.getInt("supply_id"),
-                            rs.getInt("product_id"),
-                            rs.getString("product_name"),
-                            rs.getString("category_name"),
-                            rs.getInt("supply_price"),
-                            rs.getInt("supply_amount"),
-                            rs.getTimestamp("supply_time")
-                    });
-                }
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "데이터베이스 오류: " + ex.getMessage());
-        }
+        addelement(list);
     }
 
+    public void addelement(ArrayList<SupplyProductVO> list) {
+        for (SupplyProductVO productVO : list) {
+            Vector<Object> v = new Vector<>();
+            v.add(productVO.getSupply_id());
+            v.add(productVO.getProduct_id());
+            v.add(productVO.getProduct_name());
+            v.add(productVO.getCategory_name());
+            v.add(productVO.getSupply_price());
+            v.add(productVO.getSupply_amount());
+            // v.add(productVO.getSupply_time());
+            tableModel.addRow(v);
+        }
+    }
 }
-
