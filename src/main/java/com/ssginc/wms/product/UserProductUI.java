@@ -1,59 +1,23 @@
 package com.ssginc.wms.product;
 
+import com.ssginc.wms.frame.CustomerFrame;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class UserProductUI extends JFrame {
+public class UserProductUI extends CustomerFrame {
     private JTable productTable;
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
 
     public UserProductUI() {
+        super();
         ProductDAO dao = new ProductDAO();
         // JFrame 설정
-        setTitle("재고 관리 시스템");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 1000);
-        setLayout(new BorderLayout()); // 기본 레이아웃 설정
-
-        // Top Panel
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(1200, 30));
-        JButton dropdownButton = new JButton("≡");
-        dropdownButton.setSize(30, 30);
-
-        // JPopupMenu 생성
-        JPopupMenu menu = new JPopupMenu();
-        JMenuItem logoutItem = new JMenuItem("로그아웃");
-        JMenuItem editInfoItem = new JMenuItem("회원정보수정");
-        JMenuItem deleteAccountItem = new JMenuItem("회원탈퇴");
-        menu.add(logoutItem);
-        menu.add(editInfoItem);
-        menu.add(deleteAccountItem);
-        dropdownButton.addActionListener(e -> menu.show(dropdownButton, 0, dropdownButton.getHeight()));
-
-        JLabel welcomeLabel = new JLabel("< " + "user1" + " > 님 환영합니다.     ", SwingConstants.RIGHT);
-        topPanel.add(welcomeLabel, BorderLayout.CENTER);
-        topPanel.setBackground(Color.GRAY);
-        topPanel.add(dropdownButton, BorderLayout.EAST);
-        dropdownButton.setBackground(Color.LIGHT_GRAY);
-        add(topPanel, BorderLayout.NORTH);
-
-        // Left Panel
-        JPanel leftPanel = new JPanel(new GridLayout(4, 1, 10, 10));
-        JLabel llabel = new JLabel("");
-        JButton invenUIButton = new JButton("재 고  현 황");
-        JButton orderUIButton = new JButton("주 문  내 역");
-        JButton incomeButton = new JButton("입고신청 내역");
-        leftPanel.add(llabel);
-        leftPanel.add(invenUIButton);
-        leftPanel.add(orderUIButton);
-        leftPanel.add(incomeButton);
-        leftPanel.setPreferredSize(new Dimension(150, 600));
-        add(leftPanel, BorderLayout.WEST);
+        setTitle("구매자 재고현황");
 
         // Center Panel
         JPanel centerPanel = new JPanel(new BorderLayout());
