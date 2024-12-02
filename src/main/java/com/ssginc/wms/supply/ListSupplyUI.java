@@ -111,7 +111,7 @@ public class ListSupplyUI extends JFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"발주 ID", "상품 ID", "상품 이름", "카테고리", "공급 가격", "발주 수량", "발주 시간"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"발주 ID", "상품 ID", "상품 이름", "카테고리", "발주 단가", "발주 수량", "발주 시간"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0 || columnIndex == 1 || columnIndex == 4 || columnIndex == 5) {
