@@ -118,4 +118,30 @@ public class SupplyDAO {
         }
         return products;
     }
+
+    // 발주 등록 메서드
+    public void registerSupply(int productId, int supplyAmount) throws SQLException {
+        String insertSupplySQL = "INSERT INTO Supply (supply_amount, product_id, supply_time) VALUES (?, ?, NOW())";
+        String updateProductSQL = "UPDATE PRODUCT SET product_amount = product_amount + ? WHERE product_id = ?";
+
+        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection()) {
+            conn.setAutoCommit(false); // 트랜잭션 시작
+            try (PreparedStatement pstmt1 = conn.prepareStatement(insertSupplySQL);
+                 PreparedStatement pstmt2 = conn.prepareStatement(updateProductSQL)) {
+
+                pstmt1.setInt(1, supplyAmount);
+                pstmt1.setInt(2, productId);
+                pstmt1.executeUpdate();
+
+                pstmt2.setInt(1, supplyAmount);
+                pstmt2.setInt(2, productId);
+                pstmt2.executeUpdate();
+
+                conn.commit(); // 트랜잭션 커밋
+            } catch (SQLException e) {
+                conn.rollback(); // 오류 발생 시 롤백
+                throw e;
+            }
+        }
+    }
 }
