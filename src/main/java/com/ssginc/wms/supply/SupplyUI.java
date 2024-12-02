@@ -220,9 +220,14 @@ public class SupplyUI extends JFrame {
                 "발주 등록",
                 JOptionPane.QUESTION_MESSAGE);
 
-        if (input == null || input.trim().isEmpty()) {
+        if (input == null) {
+            // 사용자가 취소한 경우 아무 작업도 하지 않고 리턴
+            return;
+        }
+
+        if (input.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "수량을 입력해주세요.");
-            return; // 사용자가 취소하거나 빈 값을 입력한 경우
+            return;
         }
 
         try {
