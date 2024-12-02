@@ -149,10 +149,7 @@ public class ListSupplyUI extends JFrame {
             new com.ssginc.wms.supply.ListSupplyUI(id);  // 발주 내역 화면 열기
             this.dispose();
         });
-        orderRegisterButton.addActionListener(e -> {
-            new SupplyUI(id);  // 발주 등록 화면 열기
-            this.dispose();
-        });
+
 
         // 초기 데이터 로드
         loadProductData("전체", "");
