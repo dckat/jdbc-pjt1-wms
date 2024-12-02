@@ -22,6 +22,18 @@ public class ListSupplyUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 700);
         setLayout(new BorderLayout()); // 기본 레이아웃 설정
+
+        setupUI(id);
+
+        // 초기 데이터 로드
+        loadProductData("전체", "");
+
+        // JFrame 표시
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void setupUI(String id) {
         Font fontT = new Font("맑은 고딕", Font.BOLD, 16);
         Font fontC = new Font("맑은 고딕", Font.BOLD, 12);
 
@@ -146,17 +158,20 @@ public class ListSupplyUI extends JFrame {
         });
 
         orderListButton.addActionListener(e -> {
-            new com.ssginc.wms.supply.ListSupplyUI(id);  // 발주 내역 화면 열기
+            new ListSupplyUI(id);  // 발주 내역 화면 열기
             this.dispose();
         });
-
-
-        // 초기 데이터 로드
-        loadProductData("전체", "");
-
-        // JFrame 표시
-        setLocationRelativeTo(null);
-        setVisible(true);
+        orderRegisterButton.addActionListener(e -> {
+            new SupplyUI(id);  // 발주 등록 화면 열기
+            this.dispose();
+        });
+        ioUIButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입출고 관리 버튼 클릭됨"));
+        incomeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입고신청 관리 버튼 클릭됨"));
+        ordButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "주문 관리 버튼 클릭됨"));
+        purordButton.addActionListener(e -> {
+            new ListSupplyUI(id);  // 새로운 UI 열기
+            this.dispose();        // 현재 창 닫기
+        });
     }
 
     public void loadProductData(String selectedColumn, String searchKeyword) {
