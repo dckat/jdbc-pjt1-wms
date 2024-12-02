@@ -1,12 +1,10 @@
 package com.ssginc.wms.supply;
 
 
-import com.ssginc.wms.hikari.HikariCPDataSource;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -119,7 +117,7 @@ public class ListSupplyUI extends JFrame {
                 if (columnIndex == 0 || columnIndex == 1 || columnIndex == 4 || columnIndex == 5) {
                     return Integer.class;
                 } else if (columnIndex == 6) {
-                    return Timestamp.class;
+                    return LocalDateTime.class;
                 } else {
                     return String.class;
                 }
@@ -168,7 +166,6 @@ public class ListSupplyUI extends JFrame {
         SupplyDAO dao = new SupplyDAO();
         tableModel.setRowCount(0); // 기존 데이터 삭제
         ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
-
         addelement(list);
     }
 
@@ -181,7 +178,7 @@ public class ListSupplyUI extends JFrame {
             v.add(productVO.getCategory_name());
             v.add(productVO.getSupply_price());
             v.add(productVO.getSupply_amount());
-            // v.add(productVO.getSupply_time());
+            v.add(productVO.getSupply_time());
             tableModel.addRow(v);
         }
     }
