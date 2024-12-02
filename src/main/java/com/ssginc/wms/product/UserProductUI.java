@@ -31,7 +31,7 @@ public class UserProductUI extends CustomerFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"상품코드", "상품이름", "분류코드", "분류이름", "상품가격", "재고수량"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"상품코드", "상품이름", "분류코드", "분류이름", "상품단가", "재고수량"}, 0);
         productTable = new JTable(tableModel);
 
         ArrayList<UserProductVO> proList = dao.listUserProduct();
