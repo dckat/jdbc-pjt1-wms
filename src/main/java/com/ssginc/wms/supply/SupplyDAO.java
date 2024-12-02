@@ -10,7 +10,7 @@ import java.util.List;
 public class SupplyDAO {
 
 
-
+    // 발주 내역 메서드
     public ArrayList<SupplyProductVO> listSupply(String selectedColumn, String searchKeyword) {
         // 콤보박스에서 선택한 값과 데이터베이스 컬럼명을 매핑
         String columnName = switch (selectedColumn) {
