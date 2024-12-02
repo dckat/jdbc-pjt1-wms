@@ -1,4 +1,4 @@
-package com.ssginc.wms.supply.UI;
+package com.ssginc.wms.supply;
 
 
 import com.ssginc.wms.hikari.HikariCPDataSource;
@@ -157,10 +157,10 @@ public class SupplyUI extends JFrame {
             this.dispose();
         });
 
-        invenUIButton.addActionListener(e -> {
-            new InventoryAdminFrame("admin");
-            this.dispose();
-        });
+//        invenUIButton.addActionListener(e -> {
+//            new InventoryAdminFrame("admin");
+//            this.dispose();
+//        });
         ioUIButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입출고 관리 버튼 클릭됨"));
         incomeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입고신청 관리 버튼 클릭됨"));
         ordButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "주문 관리 버튼 클릭됨"));
