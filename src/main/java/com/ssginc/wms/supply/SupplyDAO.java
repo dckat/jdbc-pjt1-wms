@@ -72,4 +72,50 @@ public class SupplyDAO {
         }
         return null;
     }
+
+    // 발주할 상품 데이터를 검색하는 메서드
+    public List<CategoryProductVO> listSupplies(String columnName, String searchKeyword) {
+        List<CategoryProductVO> products = new ArrayList<>();
+        String query = """
+            SELECT 
+                p.category_id, 
+                pc.category_name, 
+                p.product_id, 
+                p.product_name, 
+                p.product_amount, 
+                p.supply_price, 
+                p.ord_price 
+            FROM product p
+            JOIN product_category pc ON p.category_id = pc.category_id
+        """;
+
+        if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
+            query += " WHERE " + columnName + " = ?";
+        }
+
+        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
+                stmt.setString(1, searchKeyword);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    CategoryProductVO product = new CategoryProductVO();
+                    product.setCategoryId(rs.getInt("category_id"));
+                    product.setCategoryName(rs.getString("category_name"));
+                    product.setProductId(rs.getInt("product_id"));
+                    product.setProductName(rs.getString("product_name"));
+                    product.setProductAmount(rs.getInt("product_amount"));
+                    product.setSupplyPrice(rs.getInt("supply_price"));
+                    product.setOrdPrice(rs.getInt("ord_price"));
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 }
