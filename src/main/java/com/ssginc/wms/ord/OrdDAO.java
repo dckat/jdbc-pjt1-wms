@@ -108,4 +108,28 @@ public class OrdDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteOrder(int[] ordId) {
+        try {
+            Connection con = dataSource.getConnection();
+            try(PreparedStatement ps = con.prepareStatement("DELETE FROM ord WHERE ord_id = ?")) {
+                con.setAutoCommit(false);
+                for (int i = 0; i < ordId.length; i++) {
+                    ps.setInt(1, ordId[i]);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+                con.commit();
+            } catch (SQLException e) {
+                try {
+                    con.rollback();
+                    e.printStackTrace();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
