@@ -120,7 +120,7 @@ public class SupplyDAO {
     }
 
     // 발주 등록 메서드
-    public void registerSupply(int productId, int supplyAmount) throws SQLException {
+    public void registerSupply(SupplyVO supplyVO) throws SQLException {
         String insertSupplySQL = "INSERT INTO Supply (supply_amount, product_id, supply_time) VALUES (?, ?, NOW())";
         String updateProductSQL = "UPDATE PRODUCT SET product_amount = product_amount + ? WHERE product_id = ?";
 
@@ -129,12 +129,13 @@ public class SupplyDAO {
             try (PreparedStatement pstmt1 = conn.prepareStatement(insertSupplySQL);
                  PreparedStatement pstmt2 = conn.prepareStatement(updateProductSQL)) {
 
-                pstmt1.setInt(1, supplyAmount);
-                pstmt1.setInt(2, productId);
+                // SupplyVO 객체를 사용하여 PreparedStatement에 값 설정
+                pstmt1.setInt(1, supplyVO.getSupply_amount());
+                pstmt1.setInt(2, supplyVO.getProduct_id());
                 pstmt1.executeUpdate();
 
-                pstmt2.setInt(1, supplyAmount);
-                pstmt2.setInt(2, productId);
+                pstmt2.setInt(1, supplyVO.getSupply_amount());
+                pstmt2.setInt(2, supplyVO.getProduct_id());
                 pstmt2.executeUpdate();
 
                 conn.commit(); // 트랜잭션 커밋
