@@ -13,8 +13,6 @@ public class OrdProductVO {
     private int orderId;
     private int productId;
     private String productName;
-    private int categoryId;
-    private String categoryName;
     private int orderPrice;
     private int orderAmount;
     private int totalPrice;
