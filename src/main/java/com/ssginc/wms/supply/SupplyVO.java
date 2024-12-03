@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @ToString
 
 public class SupplyVO {  // KKH-02, KKH-08 - supply 테이블에 insert 하는 용도
-    private int supply_id;
-    private int supply_amount;
-    private int product_id;
-    private LocalDateTime supply_time;
+    private int supplyId;
+    private int supplyAmount;
+    private int productId;
+    private LocalDateTime supplyTime;
 }

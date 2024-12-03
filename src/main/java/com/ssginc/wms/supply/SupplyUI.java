@@ -239,8 +239,8 @@ public class SupplyUI extends JFrame {
 
             // SupplyVO 객체 생성 및 값 설정
             SupplyVO supplyVO = new SupplyVO();
-            supplyVO.setProduct_id(productId);
-            supplyVO.setSupply_amount(supplyAmount);
+            supplyVO.setProductId(productId);
+            supplyVO.setSupplyAmount(supplyAmount);
 
             // DAO 메서드를 호출하여 발주를 등록합니다.
             supplyDAO.registerSupply(supplyVO);
