@@ -12,7 +12,7 @@ public class OrdDAO {
     private final DataSource dataSource;
 
     // DB 연결 메서드
-    private OrdDAO() {
+    public OrdDAO() {
         dataSource = HikariCPDataSource.getInstance().getDataSource();
     }
 
