@@ -3,12 +3,19 @@ package com.ssginc.wms.supply;
 import com.ssginc.wms.hikari.HikariCPDataSource;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SupplyDAO {
+    private final DataSource dataSource;
 
+    public SupplyDAO() {
+        this.dataSource = HikariCPDataSource.getInstance().getDataSource();
+    }
 
     // 발주 내역 메서드
     public ArrayList<SupplyProductVO> listSupply(String selectedColumn, String searchKeyword) {
@@ -21,7 +28,7 @@ public class SupplyDAO {
             case "공급 가격" -> "p.supply_price";
             case "발주 수량" -> "s.supply_amount";
             case "발주 시간" -> "s.supply_time";
-            default -> null; // "전체" 또는 비정상적인 값일 경우
+            default -> null;  // "전체" 또는 비정상적인 값일 경우
         };
 
         String query = "SELECT " +
@@ -43,7 +50,7 @@ public class SupplyDAO {
 
         query += "ORDER BY s.supply_id DESC";
 
-        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             // 검색 조건이 있는 경우 파라미터 설정
@@ -93,7 +100,7 @@ public class SupplyDAO {
             query += " WHERE " + columnName + " = ?";
         }
 
-        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
@@ -124,18 +131,18 @@ public class SupplyDAO {
         String insertSupplySQL = "INSERT INTO Supply (supply_amount, product_id, supply_time) VALUES (?, ?, NOW())";
         String updateProductSQL = "UPDATE PRODUCT SET product_amount = product_amount + ? WHERE product_id = ?";
 
-        try (Connection conn = HikariCPDataSource.getInstance().getDataSource().getConnection()) {
+        try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false); // 트랜잭션 시작
             try (PreparedStatement pstmt1 = conn.prepareStatement(insertSupplySQL);
                  PreparedStatement pstmt2 = conn.prepareStatement(updateProductSQL)) {
 
                 // SupplyVO 객체를 사용하여 PreparedStatement에 값 설정
-                pstmt1.setInt(1, supplyVO.getSupply_amount());
-                pstmt1.setInt(2, supplyVO.getProduct_id());
+                pstmt1.setInt(1, supplyVO.getSupplyAmount());
+                pstmt1.setInt(2, supplyVO.getProductId());
                 pstmt1.executeUpdate();
 
-                pstmt2.setInt(1, supplyVO.getSupply_amount());
-                pstmt2.setInt(2, supplyVO.getProduct_id());
+                pstmt2.setInt(1, supplyVO.getSupplyAmount());
+                pstmt2.setInt(2, supplyVO.getProductId());
                 pstmt2.executeUpdate();
 
                 conn.commit(); // 트랜잭션 커밋
@@ -143,6 +150,8 @@ public class SupplyDAO {
                 conn.rollback(); // 오류 발생 시 롤백
                 throw e;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
