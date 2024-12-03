@@ -184,7 +184,7 @@ public class ListSupplyUI extends JFrame {
     public void addelement(ArrayList<SupplyProductVO> list) {
         for (SupplyProductVO productVO : list) {
             Vector<Object> v = new Vector<>();
-            v.add(productVO.getSupply_id());
+            v.add(SupplyService.encondSupplyId(productVO.getSupply_id()));
             v.add(productVO.getProduct_id());
             v.add(productVO.getProduct_name());
             v.add(productVO.getCategory_name());
