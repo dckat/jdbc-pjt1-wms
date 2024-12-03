@@ -3,7 +3,7 @@ package com.ssginc.wms.supply;
 
 public class SupplyService {
     // int --> String
-    public static String encondSupplyId(int supplyId) {
+    public static String encodeSupplyId(int supplyId) {
         StringBuilder sTemp = new StringBuilder();
         sTemp.append("S");
         String convertedId = String.valueOf(supplyId);
