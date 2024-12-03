@@ -1,19 +1,19 @@
 package com.ssginc.wms.inoutcomeManagement;
 
+import com.ssginc.wms.hikari.HikariCPDataSource;
 import com.ssginc.wms.inoutcomeManagement.OutComeProductVO;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrdDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/wms";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
+    private final DataSource dataSource;
 
     // DB 연결 메서드
-    private Connection connect() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    private OrdDAO() {
+        dataSource = HikariCPDataSource.getInstance().getDataSource();
     }
 
     // 출고 현황 조회 메서드
@@ -40,7 +40,7 @@ public class OrdDAO {
 
         List<OutComeProductVO> completedOrders = new ArrayList<>();
 
-        try (Connection connection = connect();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 

@@ -1,17 +1,18 @@
 package com.ssginc.wms.incomeApply;
 
+import com.ssginc.wms.hikari.HikariCPDataSource;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IncomeApplyDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/wms";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
+    private final DataSource dataSource;
 
     // DB 연결 메서드
-    private Connection connect() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public IncomeApplyDAO() {
+        dataSource = HikariCPDataSource.getInstance().getDataSource();
     }
 
     // 1. 입고 신청 내역 테이블 전시 (income_apply + product 테이블 조인 데이터 조회 메서드)
@@ -25,7 +26,7 @@ public class IncomeApplyDAO {
                 """;    // WHERE user_id = [로그인한 사용자 id]; 작성하기 구매자용 화면이므로
         List<ProductIncomeApplyVO> incomeApplies = new ArrayList<>();
 
-        try (Connection conn = connect();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -62,7 +63,7 @@ public class IncomeApplyDAO {
                  WHERE ia.apply_id = ? AND ia.apply_status = 'pending'
                 """;
 
-        try (Connection conn = connect();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             for (int applyId : applyIds) {
@@ -92,7 +93,7 @@ public class IncomeApplyDAO {
 
         List<ProductIncomeApplyVO> incomeApplies = new ArrayList<>();
 
-        try (Connection conn = connect();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, days); // 필터링할 기간을 설정
@@ -127,7 +128,7 @@ public class IncomeApplyDAO {
                 """.formatted(column);  // 쿼리에서 column을 동적으로 설정
 
         List<ProductIncomeApplyVO> incomeApplies = new ArrayList<>();
-        try (Connection conn = connect();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + searchText + "%"); // 검색어 설정
