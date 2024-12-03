@@ -23,7 +23,7 @@ public class OrdService {
         return true;
     }
 
-    public static String encondOrderId(int ordId) {
+    public static String encodeOrderId(int ordId) {
         StringBuilder sTemp = new StringBuilder();
         sTemp.append("O");      // 주문코드는 알파벳 O로 시작
         String convertedId = String.valueOf(ordId);
@@ -40,7 +40,7 @@ public class OrdService {
     public static int decodeOrderId(String orderId) {
         for (int i = 0; i < orderId.length(); i++) {
             char c = orderId.charAt(i);
-            if (Character.isDigit(c) && c > '0' && c < '9') {
+            if (Character.isDigit(c) && c > '0' && c <= '9') {
                 return Integer.parseInt(orderId.substring(i));
             }
         }
