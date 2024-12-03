@@ -111,7 +111,7 @@ public class SupplyUI extends JFrame {
 
         // 오른쪽에 위치할 검색 패널
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 코드", "상품 이름", "주문 가격", "공급 가격", "재고 수량", "카테고리 코드", "카테고리 이름"});
+        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 코드", "상품 이름", "주문 단가", "발주 단가", "재고 수량", "카테고리 코드", "카테고리"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         rightSearchPanel.add(categoryComboBox);
@@ -125,7 +125,7 @@ public class SupplyUI extends JFrame {
 
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"카테고리 코드", "카테고리 이름", "상품 ID", "상품 이름", "재고 수량", "공급 가격", "주문 가격"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"카테고리 코드", "카테고리", "상품 코드", "상품 이름", "재고 수량", "발주 단가", "주문 단가"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 5 || columnIndex == 6) {
