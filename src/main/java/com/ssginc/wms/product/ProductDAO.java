@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDAO {
     private final DataSource dataSource;
@@ -186,6 +188,19 @@ public class ProductDAO {
         return null;
     }
 
-
-
+    public Map<Integer, Integer> getAmountById() {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT product_id, product_amount " +
+                     "FROM product")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                Map<Integer, Integer> proMap = new HashMap<>();
+                while (rs.next()) {
+                    proMap.put(rs.getInt("product_id"), rs.getInt("product_amount"));
+                }
+                return proMap;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
