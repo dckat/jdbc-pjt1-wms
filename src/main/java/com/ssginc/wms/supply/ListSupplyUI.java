@@ -169,13 +169,13 @@ public class ListSupplyUI extends JFrame {
     public void addelement(ArrayList<SupplyProductVO> list) {
         for (SupplyProductVO productVO : list) {
             Vector<Object> v = new Vector<>();
-            v.add(productVO.getSupply_id());
-            v.add(productVO.getProduct_id());
-            v.add(productVO.getProduct_name());
-            v.add(productVO.getCategory_name());
-            v.add(productVO.getSupply_price());
-            v.add(productVO.getSupply_amount());
-            v.add(productVO.getSupply_time());
+            v.add(productVO.getSupplyId());
+            v.add(productVO.getProductId());
+            v.add(productVO.getProductName());
+            v.add(productVO.getCategoryName());
+            v.add(productVO.getSupplyPrice());
+            v.add(productVO.getSupplyAmount());
+            v.add(productVO.getSupplyTime());
             tableModel.addRow(v);
         }
     }
