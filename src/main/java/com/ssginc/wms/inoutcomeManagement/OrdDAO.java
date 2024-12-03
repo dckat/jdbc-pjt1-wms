@@ -24,7 +24,7 @@ public class OrdDAO {
                 o.ord_amount AS ordAmount,
                 o.product_id AS productId,
                 o.ord_status AS ordStatus,
-                o.ord_completion_time AS ordCompletionTime,
+                o.ord_complete_time AS ordCompleteTime,
                 p.product_name AS productName,
                 p.ord_price AS ordPrice,
                 pc.category_name AS categoryName
@@ -52,9 +52,9 @@ public class OrdDAO {
 
 
                 // LocalDateTime으로 변환
-                Timestamp timestamp = rs.getTimestamp("ordCompletionTime");
+                Timestamp timestamp = rs.getTimestamp("ordCompleteTime");
                 if (timestamp != null) {
-                    vo.setOrdCompletionTime(timestamp.toLocalDateTime());
+                    vo.setOrdCompleteTime(timestamp.toLocalDateTime());
                 }
 
                 vo.setProductName(rs.getString("productName"));

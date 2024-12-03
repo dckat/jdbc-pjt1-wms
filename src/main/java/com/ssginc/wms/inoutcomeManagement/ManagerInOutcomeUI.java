@@ -169,7 +169,7 @@ public class ManagerInOutcomeUI extends CustomerFrame {
                     vo.getOrdPrice(),
                     vo.getCategoryName(),
                     vo.getOrdAmount(),
-                    vo.getOrdCompletionTime() != null ? vo.getOrdCompletionTime().toLocalDate().toString() : "N/A"
+                    vo.getOrdCompleteTime() != null ? vo.getOrdCompleteTime().toLocalDate().toString() : "N/A"
             });
         }
     }
