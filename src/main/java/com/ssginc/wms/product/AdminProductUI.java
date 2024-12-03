@@ -250,22 +250,22 @@ public class AdminProductUI extends JFrame {
         insertFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         insertFrame.setLayout(null);
 
-        JLabel nameLabel = new JLabel("상품 이름:");
+        JLabel nameLabel = new JLabel("상  품    이  름:");
         JTextField nameField = new JTextField();
         nameLabel.setBounds(70, 50, 100, 30);
         nameField.setBounds(190, 50, 180, 30);
 
-        JLabel ordPriceLabel = new JLabel("주문 가격:");
+        JLabel ordPriceLabel = new JLabel("주  문    가  격:");
         JTextField ordPriceField = new JTextField();
         ordPriceLabel.setBounds(70, 100, 100, 30);
         ordPriceField.setBounds(190, 100, 180, 30);
 
-        JLabel supplyPriceLabel = new JLabel("공급 가격:");
+        JLabel supplyPriceLabel = new JLabel("공  급    가  격:");
         JTextField supplyPriceField = new JTextField();
         supplyPriceLabel.setBounds(70, 150, 100, 30);
         supplyPriceField.setBounds(190, 150, 180, 30);
 
-        JLabel quantityLabel = new JLabel("재고 수량:");
+        JLabel quantityLabel = new JLabel("재  고    수  량:");
         JTextField quantityField = new JTextField();
         quantityLabel.setBounds(70, 200, 100, 30);
         quantityField.setBounds(190, 200, 180, 30);
@@ -328,22 +328,22 @@ public class AdminProductUI extends JFrame {
         updateFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         updateFrame.setLayout(null);
 
-        JLabel nameLabel = new JLabel("상품 이름:");
+        JLabel nameLabel = new JLabel("상  품    이  름:");
         JTextField nameField = new JTextField(product.getProductName());
         nameLabel.setBounds(70, 50, 100, 30);
         nameField.setBounds(190, 50, 180, 30);
 
-        JLabel ordPriceLabel = new JLabel("주문 가격:");
+        JLabel ordPriceLabel = new JLabel("주  문    가  격:");
         JTextField ordPriceField = new JTextField(String.valueOf(product.getOrderPrice()));
         ordPriceLabel.setBounds(70, 100, 100, 30);
         ordPriceField.setBounds(190, 100, 180, 30);
 
-        JLabel supplyPriceLabel = new JLabel("공급 가격:");
+        JLabel supplyPriceLabel = new JLabel("공  급    가  격:");
         JTextField supplyPriceField = new JTextField(String.valueOf(product.getSupplyPrice()));
         supplyPriceLabel.setBounds(70, 150, 100, 30);
         supplyPriceField.setBounds(190, 150, 180, 30);
 
-        JLabel quantityLabel = new JLabel("재고 수량:");
+        JLabel quantityLabel = new JLabel("재  고    수  량:");
         JTextField quantityField = new JTextField(String.valueOf(product.getProductAmount()));
         quantityLabel.setBounds(70, 200, 100, 30);
         quantityField.setBounds(190, 200, 180, 30);
@@ -353,7 +353,7 @@ public class AdminProductUI extends JFrame {
         categoryLabel.setBounds(70, 250, 100, 30);
         categoryField.setBounds(190, 250, 180, 30);
 
-        JButton saveButton = new JButton("수정");
+        JButton saveButton = new JButton("수 정");
         saveButton.setBounds(150, 300, 100, 40);
 
         saveButton.addActionListener(e -> {
