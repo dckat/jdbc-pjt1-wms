@@ -93,7 +93,8 @@ public class OrdCustomerUI extends CustomerFrame {
     public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(data.getOrderId());
+            String ordId = OrdService.encondOrderId(data.getOrderId());
+            v.add(ordId);
             v.add(data.getProductId());
             v.add(data.getProductName());
             v.add(data.getCategoryId());
