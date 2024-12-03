@@ -126,7 +126,7 @@ public class ManagerInOutcomeUI extends CustomerFrame {
         String searchKeyword = inputSearchField.getText().toLowerCase();
 
         List<SupplyProductVO> filteredSupplies = supplyProducts.stream()
-                .filter(vo -> (selectedSearchCriteria.equals("입고 코드") && Integer.toString(vo.getSupplyId()).contains(searchKeyword) ||
+                .filter(vo -> (selectedSearchCriteria.equals("입고 코드") && InoutcomeManagementService.encodeIncomeId(vo.getSupplyId()).toLowerCase().contains(searchKeyword) ||
                         selectedSearchCriteria.equals("상품 이름") && vo.getProductName().toLowerCase().contains(searchKeyword) ||
                         selectedSearchCriteria.equals("카테고리 이름") && vo.getCategoryName().toLowerCase().contains(searchKeyword)))
                 .collect(Collectors.toList());
@@ -136,12 +136,12 @@ public class ManagerInOutcomeUI extends CustomerFrame {
 
         for (SupplyProductVO vo : filteredSupplies) {
             inputTableModel.addRow(new Object[]{
-                    vo.getSupplyId(),
-                    vo.getProductId(),
+                    InoutcomeManagementService.encodeIncomeId(vo.getSupplyId()), // 입고 코드
+                    vo.getProductId(), // 상품 코드
                     vo.getProductName(),
                     vo.getSupplyPrice(),
                     vo.getSupplyAmount(),
-                    vo.getTotalPrice(), // 추가된 필드
+                    vo.getTotalPrice(),
                     vo.getCategoryName(),
                     vo.getSupplyTime() != null ? vo.getSupplyTime().toLocalDate().toString() : "N/A"
             });
@@ -153,7 +153,7 @@ public class ManagerInOutcomeUI extends CustomerFrame {
         String searchKeyword = outputSearchField.getText().toLowerCase();
 
         List<OutComeProductVO> filteredOrders = orderProducts.stream()
-                .filter(vo -> (selectedSearchCriteria.equals("출고 코드") && Integer.toString(vo.getOrdId()).contains(searchKeyword) ||
+                .filter(vo -> (selectedSearchCriteria.equals("출고 코드") && InoutcomeManagementService.encodeOutcomeId(vo.getOrdId()).toLowerCase().contains(searchKeyword) ||
                         selectedSearchCriteria.equals("상품 이름") && vo.getProductName().toLowerCase().contains(searchKeyword) ||
                         selectedSearchCriteria.equals("카테고리 이름") && vo.getCategoryName().toLowerCase().contains(searchKeyword)))
                 .collect(Collectors.toList());
@@ -163,7 +163,7 @@ public class ManagerInOutcomeUI extends CustomerFrame {
 
         for (OutComeProductVO vo : filteredOrders) {
             outputTableModel.addRow(new Object[]{
-                    vo.getOrdId(),
+                    InoutcomeManagementService.encodeOutcomeId(vo.getOrdId()), // 출고 코드
                     vo.getProductId(),
                     vo.getProductName(),
                     vo.getOrdPrice(),
