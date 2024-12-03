@@ -55,13 +55,13 @@ public class SupplyDAO {
                 ArrayList<SupplyProductVO> list = new ArrayList<>();
                 while (rs.next()) {
                     SupplyProductVO vo = new SupplyProductVO();
-                    vo.setSupply_id(rs.getInt("supply_id"));
-                    vo.setProduct_id(rs.getInt("product_id"));
-                    vo.setProduct_name(rs.getString("product_name"));
-                    vo.setCategory_name(rs.getString("category_name"));
-                    vo.setSupply_price(rs.getInt("supply_price"));
-                    vo.setSupply_amount(rs.getInt("supply_amount"));
-                    vo.setSupply_time(rs.getTimestamp("supply_time").toLocalDateTime());
+                    vo.setSupplyId(rs.getInt("supply_id"));
+                    vo.setProductId(rs.getInt("product_id"));
+                    vo.setProductName(rs.getString("product_name"));
+                    vo.setCategoryName(rs.getString("category_name"));
+                    vo.setSupplyPrice(rs.getInt("supply_price"));
+                    vo.setSupplyAmount(rs.getInt("supply_amount"));
+                    vo.setSupplyTime(rs.getTimestamp("supply_time").toLocalDateTime());
                     list.add(vo);
                 }
                 return list;
