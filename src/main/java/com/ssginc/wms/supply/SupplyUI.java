@@ -4,21 +4,23 @@ package com.ssginc.wms.supply;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Vector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.List;
 
-
-public class ListSupplyUI extends JFrame {
+public class SupplyUI extends JFrame {
     private JTable productTable;
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
+    private SupplyDAO supplyDAO;
     Color color = new Color(0x615959);
 
+    public SupplyUI(String id) {
+        supplyDAO = new SupplyDAO();
 
-    public ListSupplyUI(String id) {
         // JFrame 설정
-        setTitle("발주 내역 시스템_Admin");
+        setTitle("발주 등록 시스템_Admin");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 700);
         setLayout(new BorderLayout()); // 기본 레이아웃 설정
@@ -34,9 +36,8 @@ public class ListSupplyUI extends JFrame {
     }
 
     private void setupUI(String id) {
-        Font fontT = new Font("맑은 고딕", Font.BOLD, 16);
-        Font fontC = new Font("맑은 고딕", Font.BOLD, 12);
-
+        Font fontT  = new Font("맑은 고딕", Font.BOLD, 16);
+        Font fontC = new Font("맑은 고딕", Font.BOLD,12);
         // Top Panel
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setPreferredSize(new Dimension(1200, 30));
@@ -110,7 +111,7 @@ public class ListSupplyUI extends JFrame {
 
         // 오른쪽에 위치할 검색 패널
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "발주 코드", "상품 코드", "상품 이름", "카테고리", "발주 단가", "발주 수량", "발주일"});
+        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 코드", "상품 이름", "주문 단가", "발주 단가", "재고 수량", "카테고리 코드", "카테고리"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         rightSearchPanel.add(categoryComboBox);
@@ -122,14 +123,13 @@ public class ListSupplyUI extends JFrame {
         filterPanel.add(rightSearchPanel, BorderLayout.EAST);
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
+
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"발주 코드", "상품 코드", "상품 이름", "카테고리", "발주 단가", "발주 수량", "발주일"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"카테고리 코드", "카테고리", "상품 코드", "상품 이름", "재고 수량", "발주 단가", "주문 단가"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0 || columnIndex == 1 || columnIndex == 4 || columnIndex == 5) {
+                if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 5 || columnIndex == 6) {
                     return Integer.class;
-                } else if (columnIndex == 6) {
-                    return LocalDateTime.class;
                 } else {
                     return String.class;
                 }
@@ -147,7 +147,10 @@ public class ListSupplyUI extends JFrame {
         // Bottom Panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel blabel = new JLabel("");
+        JButton addSupplyButton = new JButton("선택 상품 발주");
         bottomPanel.add(blabel);
+        bottomPanel.add(addSupplyButton);
+        addSupplyButton.setFont(fontC);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // 이벤트 리스너 추가
@@ -165,6 +168,7 @@ public class ListSupplyUI extends JFrame {
             new SupplyUI(id);  // 발주 등록 화면 열기
             this.dispose();
         });
+
         ioUIButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입출고 관리 버튼 클릭됨"));
         incomeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입고신청 관리 버튼 클릭됨"));
         ordButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "주문 관리 버튼 클릭됨"));
@@ -172,26 +176,84 @@ public class ListSupplyUI extends JFrame {
             new ListSupplyUI(id);  // 새로운 UI 열기
             this.dispose();        // 현재 창 닫기
         });
+
+        addSupplyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                supplySelectedRows();
+            }
+        });
     }
 
     public void loadProductData(String selectedColumn, String searchKeyword) {
-        SupplyDAO dao = new SupplyDAO();
         tableModel.setRowCount(0); // 기존 데이터 삭제
-        ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
-        addelement(list);
-    }
 
-    public void addelement(ArrayList<SupplyProductVO> list) {
-        for (SupplyProductVO productVO : list) {
-            Vector<Object> v = new Vector<>();
-            v.add(productVO.getSupplyId());
-            v.add(productVO.getProductId());
-            v.add(productVO.getProductName());
-            v.add(productVO.getCategoryName());
-            v.add(productVO.getSupplyPrice());
-            v.add(productVO.getSupplyAmount());
-            v.add(productVO.getSupplyTime());
-            tableModel.addRow(v);
+        List<CategoryProductVO> products = supplyDAO.listSupplies(selectedColumn, searchKeyword);
+
+        for (CategoryProductVO product : products) {
+            tableModel.addRow(new Object[]{
+                    product.getCategoryId(),
+                    product.getCategoryName(),
+                    product.getProductId(),
+                    product.getProductName(),
+                    product.getProductAmount(),
+                    product.getSupplyPrice(),
+                    product.getOrdPrice()
+            });
         }
     }
+
+    private void supplySelectedRows() {
+        int selectedRow = productTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "발주할 상품을 선택해주세요.");
+            return;
+        }
+
+        // 선택된 행에서 상품 ID를 가져옵니다.
+        int productId = (int) tableModel.getValueAt(selectedRow, 2); // 상품 ID가 있는 열의 인덱스를 확인하세요.
+        String productName = (String) tableModel.getValueAt(selectedRow, 3); // 상품 이름
+
+        // 사용자에게 발주 수량을 입력받습니다.
+        String input = JOptionPane.showInputDialog(this,
+                "상품명: " + productName + "\n발주 수량을 입력하세요:",
+                "발주 등록",
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (input == null) {
+            // 사용자가 취소한 경우 아무 작업도 하지 않고 리턴
+            return;
+        }
+
+        if (input.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "수량을 입력해주세요.");
+            return;
+        }
+
+        try {
+            int supplyAmount = Integer.parseInt(input.trim());
+            if (supplyAmount <= 0) {
+                JOptionPane.showMessageDialog(this, "유효한 수량을 입력해주세요.");
+                return;
+            }
+
+            // SupplyVO 객체 생성 및 값 설정
+            SupplyVO supplyVO = new SupplyVO();
+            supplyVO.setProduct_id(productId);
+            supplyVO.setSupply_amount(supplyAmount);
+
+            // DAO 메서드를 호출하여 발주를 등록합니다.
+            supplyDAO.registerSupply(supplyVO);
+
+            JOptionPane.showMessageDialog(this, "발주가 성공적으로 등록되었습니다.");
+            loadProductData("전체", ""); // 테이블 데이터를 새로고침합니다.
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "유효한 숫자를 입력해주세요.");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "데이터베이스 오류: " + ex.getMessage());
+        }
+    }
+
 }
+
