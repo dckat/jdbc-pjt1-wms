@@ -49,8 +49,6 @@ public class OrdDAO {
                     vo.setOrderId(rs.getInt("ord_id"));
                     vo.setProductId(rs.getInt("product_id"));
                     vo.setProductName(rs.getString("product_name"));
-                    vo.setCategoryId(rs.getInt("category_id"));
-                    vo.setCategoryName(rs.getString("category_name"));
                     vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setOrderAmount(rs.getInt("ord_amount"));
                     vo.setTotalPrice(rs.getInt("total_price"));
@@ -93,8 +91,6 @@ public class OrdDAO {
                     vo.setOrderId(rs.getInt("ord_id"));
                     vo.setProductId(rs.getInt("product_id"));
                     vo.setProductName(rs.getString("product_name"));
-                    vo.setCategoryId(rs.getInt("category_id"));
-                    vo.setCategoryName(rs.getString("category_name"));
                     vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setOrderAmount(rs.getInt("ord_amount"));
                     vo.setTotalPrice(rs.getInt("total_price"));
