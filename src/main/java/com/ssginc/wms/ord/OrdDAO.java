@@ -28,6 +28,38 @@ public class OrdDAO {
         }
     }
 
+    public ArrayList<OrdProductVO> listOrder() {
+        try (Connection con = dataSource.getConnection();
+             // 탈퇴한 회원의 주문내역은 나오지 않도록 처리
+             PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
+                     "ord_price, ord_amount, " +
+                     "(ord_price * ord_amount) total_price, " +
+                     "ord_time, ord_status " +
+                     "FROM ord o " +
+                     "INNER JOIN product p " +
+                     "ON o.product_id = p.product_id " +
+                     "WHERE o.user_id NOT LIKE '%\\_%'")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                ArrayList<OrdProductVO> list = new ArrayList<>();
+                while (rs.next()) {
+                    OrdProductVO vo = new OrdProductVO();
+                    vo.setOrderId(rs.getInt("ord_id"));
+                    vo.setProductId(rs.getInt("product_id"));
+                    vo.setProductName(rs.getString("product_name"));
+                    vo.setOrderPrice(rs.getInt("ord_price"));
+                    vo.setOrderAmount(rs.getInt("ord_amount"));
+                    vo.setTotalPrice(rs.getInt("total_price"));
+                    vo.setOrderTime(rs.getTimestamp("ord_time").toLocalDateTime());
+                    vo.setOrderStatus(rs.getString("ord_status"));
+                    list.add(vo);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public ArrayList<OrdProductVO> listByUserId(String userId) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
@@ -129,5 +161,33 @@ public class OrdDAO {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    public void updateOrderStatus(int[] ordIds, int[] ordAmounts) {
+        try {
+            Connection con = dataSource.getConnection();
+            try(PreparedStatement ps = con.prepareStatement("UPDATE ord o INNER JOIN product p " +
+                    "ON o.product_id = p.product_id " +
+                    "SET ord_status = 'completed', product_amount = product_amount - ?, " +
+                    "ord_complete_time = NOW() WHERE ord_id = ?")) {
+                con.setAutoCommit(false);
+                for (int i = 0; i < ordIds.length; i++) {
+                    ps.setInt(1, ordAmounts[i]);
+                    ps.setInt(2, ordIds[i]);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+                con.commit();
+            } catch (SQLException e) {
+                try {
+                    con.rollback();
+                    e.printStackTrace();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
