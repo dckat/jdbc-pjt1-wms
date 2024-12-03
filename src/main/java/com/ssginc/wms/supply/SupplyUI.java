@@ -237,8 +237,13 @@ public class SupplyUI extends JFrame {
                 return;
             }
 
+            // SupplyVO 객체 생성 및 값 설정
+            SupplyVO supplyVO = new SupplyVO();
+            supplyVO.setProduct_id(productId);
+            supplyVO.setSupply_amount(supplyAmount);
+
             // DAO 메서드를 호출하여 발주를 등록합니다.
-            supplyDAO.registerSupply(productId, supplyAmount);
+            supplyDAO.registerSupply(supplyVO);
 
             JOptionPane.showMessageDialog(this, "발주가 성공적으로 등록되었습니다.");
             loadProductData("전체", ""); // 테이블 데이터를 새로고침합니다.
