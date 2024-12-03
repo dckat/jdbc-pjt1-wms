@@ -125,7 +125,7 @@ public class SupplyUI extends JFrame {
 
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"카테고리 ID", "카테고리 이름", "상품 ID", "상품 이름", "재고 수량", "공급 가격", "주문 가격"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"카테고리 코드", "카테고리 이름", "상품 ID", "상품 이름", "재고 수량", "공급 가격", "주문 가격"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 5 || columnIndex == 6) {
