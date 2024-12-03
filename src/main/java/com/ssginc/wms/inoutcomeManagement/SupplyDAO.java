@@ -1,19 +1,18 @@
 package com.ssginc.wms.inoutcomeManagement;
 
+import com.ssginc.wms.hikari.HikariCPDataSource;
 import com.ssginc.wms.supply.SupplyProductVO;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SupplyDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/wms";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
+    private final DataSource dataSource;
 
-    // DB 연결 메서드
-    private Connection connect() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public SupplyDAO() {
+        dataSource = HikariCPDataSource.getInstance().getDataSource();
     }
 
     // 조인된 데이터를 가져오는 메서드
@@ -38,7 +37,7 @@ public class SupplyDAO {
 
         List<SupplyProductVO> supplyProducts = new ArrayList<>();
 
-        try (Connection connection = connect();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
