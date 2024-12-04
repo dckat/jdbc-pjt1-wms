@@ -1,4 +1,4 @@
-package com.ssginc.wms.inoutcomeManagement;
+package com.ssginc.wms.inoutManage;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-public class OutComeProductVO {
+public class OutgoingProductVO {
     private int ordId; // 출고 코드
     private int ordAmount; // 출고 수량
     private int productId; // 상품 코드

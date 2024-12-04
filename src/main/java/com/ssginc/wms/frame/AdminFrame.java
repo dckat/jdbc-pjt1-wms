@@ -1,10 +1,10 @@
 package com.ssginc.wms.frame;
 
-import com.ssginc.wms.inoutcomeManagement.AdminIncomeUI;
+import com.ssginc.wms.inoutManage.AdminIncomeUI;
 import com.ssginc.wms.ord.OrdAdminUI;
 import com.ssginc.wms.product.AdminProductUI;
 import com.ssginc.wms.product.ProductDAO;
-import com.ssginc.wms.supply.AdminIncomeApplyUI;
+import com.ssginc.wms.incomeApply.AdminIncomeApplyUI;
 import com.ssginc.wms.supply.ListSupplyUI;
 import com.ssginc.wms.user.LoginFrameUI;
 

@@ -1,5 +1,6 @@
-package com.ssginc.wms.inoutcomeManagement;
+package com.ssginc.wms.inoutManage;
 import com.ssginc.wms.frame.AdminFrame;
+import com.ssginc.wms.ord.OrdDAO;
 import com.ssginc.wms.product.ProductService;
 
 import javax.swing.*;
@@ -9,15 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-public class AdminOutcomeUI extends AdminFrame {
+public class AdminOutgoingUI extends AdminFrame {
     private JTable table;
     private OrdDAO ordDAO;
     Color color = new Color(0x615959);
     private DefaultTableModel model;
-    private List<OutComeProductVO> ordList;
+    private List<OutgoingProductVO> ordList;
 
 
-    public AdminOutcomeUI(String id) {
+    public AdminOutgoingUI(String id) {
         super(id);
         Font fontT  = new Font("맑은 고딕", Font.BOLD, 16);
 
@@ -78,7 +79,7 @@ public class AdminOutcomeUI extends AdminFrame {
 
             // Filter the table based on the selected column and filter text
             DefaultTableModel filteredModel = new DefaultTableModel(columnNames, 0);
-            for (OutComeProductVO ord : ordList) {
+            for (OutgoingProductVO ord : ordList) {
                 // Add condition based on selected column
                 String cellValue = "";
                 switch (columnIndex) {
@@ -120,9 +121,9 @@ public class AdminOutcomeUI extends AdminFrame {
 
         // 테이블에 데이터 추가
         ordList = ordDAO.getCompletedOrders();
-        for (OutComeProductVO ord : ordList) {
+        for (OutgoingProductVO ord : ordList) {
             Vector<Object> v = new Vector<>();
-            v.add(InoutcomeManagementService.encodeOutcomeId(ord.getOrdId()));
+            v.add(InOutManageService.encodeOutcomeId(ord.getOrdId()));
             v.add(ord.getOrdAmount());
             v.add(ProductService.encodeProductId(ord.getProductId()));
             v.add(ord.getOrdCompleteTime());

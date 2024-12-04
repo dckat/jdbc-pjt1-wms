@@ -1,6 +1,6 @@
-package com.ssginc.wms.inoutcomeManagement;
+package com.ssginc.wms.inoutManage;
 
-public class InoutcomeManagementService {
+public class InOutManageService {
 
     public static String encodeIncomeId(int ordId) {
         StringBuilder sTemp = new StringBuilder();

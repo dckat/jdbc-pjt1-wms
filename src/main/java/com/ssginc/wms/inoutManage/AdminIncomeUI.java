@@ -1,7 +1,8 @@
-package com.ssginc.wms.inoutcomeManagement;
+package com.ssginc.wms.inoutManage;
 
 import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.product.ProductService;
+import com.ssginc.wms.supply.SupplyDAO;
 import com.ssginc.wms.supply.SupplyProductVO;
 
 import javax.swing.*;
@@ -68,7 +69,7 @@ public class AdminIncomeUI extends AdminFrame {
 
         outStockButton.addActionListener(e -> {
             dispose();
-            new AdminOutcomeUI(id);
+            new AdminOutgoingUI(id);
         });
 
         // Add filter functionality to the filter button
@@ -125,7 +126,7 @@ public class AdminIncomeUI extends AdminFrame {
         supplyList = supplyDAO.getSuppliesWithProductAndCategory();
         for (SupplyProductVO supply : supplyList) {
             Vector<Object> v = new Vector<>();
-            v.add(InoutcomeManagementService.encodeIncomeId(supply.getSupplyId()));
+            v.add(InOutManageService.encodeIncomeId(supply.getSupplyId()));
             v.add(ProductService.encodeProductId(supply.getProductId()));
             v.add(supply.getProductName());
             v.add(supply.getCategoryName());

@@ -9,14 +9,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserIncomeApplyHistoryUI extends CustomerFrame {
+public class CustomerIncomeApplyUI extends CustomerFrame {
     private JTable incomeTable;
     private DefaultTableModel tableModel;
     private final ProductIncomeService productIncomeService;
     private IncomeApplyDAO dao;
     private JButton yearButton, monthButton, weekButton;
 
-    public UserIncomeApplyHistoryUI(String userId) {
+    public CustomerIncomeApplyUI(String userId) {
         super(userId);
         this.productIncomeService = new ProductIncomeService();
         this.dao = new IncomeApplyDAO();

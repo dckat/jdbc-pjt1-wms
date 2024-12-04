@@ -1,6 +1,6 @@
 package com.ssginc.wms.frame;
 
-import com.ssginc.wms.incomeApply.UserIncomeApplyHistoryUI;
+import com.ssginc.wms.incomeApply.CustomerIncomeApplyUI;
 import com.ssginc.wms.ord.OrdCustomerUI;
 import com.ssginc.wms.product.ProductDAO;
 import com.ssginc.wms.product.UserProductUI;
@@ -101,7 +101,7 @@ public class CustomerFrame extends JFrame {
         });
         incomeHistoryButton.addActionListener(e -> {
             this.dispose();
-            new UserIncomeApplyHistoryUI(loggedInUserId);
+            new CustomerIncomeApplyUI(loggedInUserId);
         });
     }
 
