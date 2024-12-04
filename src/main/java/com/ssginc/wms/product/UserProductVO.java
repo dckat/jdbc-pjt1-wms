@@ -10,7 +10,7 @@ import lombok.ToString;
 public class UserProductVO {
     private int productId;
     private String productName;
-    private int categoryCode;
+    private int categoryId;
     private String categoryName;
     private int orderPrice;
     private int productAmount;

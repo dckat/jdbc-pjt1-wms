@@ -32,7 +32,7 @@ public class ProductDAO {
                     UserProductVO vo = new UserProductVO();
                     vo.setProductId(rs.getInt("product_id"));
                     vo.setProductName(rs.getString("product_name"));
-                    vo.setCategoryCode(rs.getInt("category_id"));
+                    vo.setCategoryId(rs.getInt("category_id"));
                     vo.setCategoryName(rs.getString("category_name"));
                     vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setProductAmount(rs.getInt("product_amount"));
@@ -62,7 +62,7 @@ public class ProductDAO {
                     UserProductVO vo = new UserProductVO();
                     vo.setProductId(rs.getInt("product_id"));
                     vo.setProductName(rs.getString("product_name"));
-                    vo.setCategoryCode(rs.getInt("category_id"));
+                    vo.setCategoryId(rs.getInt("category_id"));
                     vo.setCategoryName(rs.getString("category_name"));
                     vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setProductAmount(rs.getInt("product_amount"));
