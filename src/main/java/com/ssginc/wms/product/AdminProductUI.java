@@ -4,6 +4,7 @@ import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.user.LoginFrameUI;
 import com.ssginc.wms.product.ProductDAO;
 import com.ssginc.wms.product.ProductVO;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -93,7 +94,7 @@ public class AdminProductUI extends AdminFrame {
             }
 
             // 선택된 row에서 productId 가져오기
-            int productId = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+            int productId = DecodeId.decodeId(tableModel.getValueAt(selectedRow, 0).toString());
             ProductVO selectedProduct = productDAO.getProductById(productId);
 
             if (selectedProduct == null) {
@@ -152,7 +153,7 @@ public class AdminProductUI extends AdminFrame {
         if (confirm != JOptionPane.YES_OPTION) return;
 
         for (int i = selectedRows.length - 1; i >= 0; i--) {
-            int productId = Integer.parseInt(tableModel.getValueAt(selectedRows[i], 0).toString());
+            int productId = DecodeId.decodeId(tableModel.getValueAt(selectedRows[i], 0).toString());
             if (productDAO.deleteProduct(productId)) {
                 tableModel.removeRow(selectedRows[i]);
             } else {
