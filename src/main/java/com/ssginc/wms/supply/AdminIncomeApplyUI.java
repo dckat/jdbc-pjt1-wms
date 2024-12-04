@@ -1,5 +1,8 @@
 package com.ssginc.wms.supply;
 
+import com.ssginc.wms.incomeApply.IncomeApplyService;
+import com.ssginc.wms.product.ProductService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -170,8 +173,8 @@ public class AdminIncomeApplyUI extends JFrame {
             List<ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(null, null);
             for (ProductIncomeApplyVO application : applications) {
                 tableModel.addRow(new Object[]{
-                        IncomeApplyService.encondApplyId(application.getApplyId()),
-                        application.getProductId(),
+                        IncomeApplyService.encodeApplyId(application.getApplyId()),
+                        ProductService.encodeProductId(application.getProductId()),
                         application.getProductName(),
                         application.getCategoryName(),
                         application.getUserId(),
@@ -185,8 +188,8 @@ public class AdminIncomeApplyUI extends JFrame {
             List<ProductIncomeApplyVO> applications = incomeApplyDAO.listPendingIncomeApplies();
             for (ProductIncomeApplyVO application : applications) {
                 tableModel.addRow(new Object[]{
-                        IncomeApplyService.encondApplyId(application.getApplyId()),
-                        application.getProductId(),
+                        IncomeApplyService.encodeApplyId(application.getApplyId()),
+                        ProductService.encodeProductId(application.getProductId()),
                         application.getProductName(),
                         application.getCategoryName(),
                         application.getUserId(),
@@ -222,8 +225,8 @@ public class AdminIncomeApplyUI extends JFrame {
 
         for (ProductIncomeApplyVO application : applications) {
             tableModel.addRow(new Object[]{
-                    IncomeApplyService.encondApplyId(application.getApplyId()),
-                    application.getProductId(),
+                    IncomeApplyService.encodeApplyId(application.getApplyId()),
+                    ProductService.encodeProductId(application.getProductId()),
                     application.getProductName(),
                     application.getCategoryName(),
                     application.getUserId(),

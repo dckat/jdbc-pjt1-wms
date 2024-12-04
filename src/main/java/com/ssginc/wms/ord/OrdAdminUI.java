@@ -155,8 +155,8 @@ public class OrdAdminUI extends JFrame {
     public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(data.getOrderId());
-            v.add(data.getProductId());
+            v.add(OrdService.encodeOrderId(data.getOrderId()));
+            v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
             v.add(data.getOrderPrice());
             v.add(data.getOrderAmount());

@@ -137,9 +137,9 @@ public class UserProductUI extends CustomerFrame {
     public void addElement(ArrayList<UserProductVO> list) {
         for (UserProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(data.getProductId());
+            v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
-            v.add(data.getCategoryCode());
+            v.add(ProductService.encodeCategoryId(data.getCategoryId()));
             v.add(data.getCategoryName());
             v.add(data.getOrderPrice());
             v.add(data.getProductAmount());

@@ -1,6 +1,8 @@
 package com.ssginc.wms.supply;
 
 
+import com.ssginc.wms.product.ProductService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -184,8 +186,8 @@ public class ListSupplyUI extends JFrame {
     public void addelement(ArrayList<SupplyProductVO> list) {
         for (SupplyProductVO productVO : list) {
             Vector<Object> v = new Vector<>();
-            v.add(productVO.getSupplyId());
-            v.add(productVO.getProductId());
+            v.add(SupplyService.encodeSupplyId(productVO.getSupplyId()));
+            v.add(ProductService.encodeProductId(productVO.getProductId()));
             v.add(productVO.getProductName());
             v.add(productVO.getCategoryName());
             v.add(productVO.getSupplyPrice());
