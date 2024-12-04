@@ -2,7 +2,6 @@ package com.ssginc.wms.incomeApply;
 
 import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.product.ProductService;
-import com.ssginc.wms.supply.IncomeApplyDAO;
 import com.ssginc.wms.supply.ProductIncomeApplyVO;
 import com.ssginc.wms.supply.SupplyVO;
 import com.ssginc.wms.util.DecodeId;
@@ -20,7 +19,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
     private JTable applicationTable;
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
-    private com.ssginc.wms.supply.IncomeApplyDAO incomeApplyDAO;
+    private IncomeApplyDAO incomeApplyDAO;
     Color color = new Color(0x615959);
 
     public AdminIncomeApplyUI(String id) {

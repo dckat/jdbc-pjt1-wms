@@ -57,7 +57,7 @@ public class ListSupplyUI extends AdminFrame {
 
         // 오른쪽에 위치할 검색 패널
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "발주 코드", "상품 코드", "상품 이름", "카테고리", "발주 단가", "발주 수량", "발주일"});
+        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 이름", "카테고리"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         rightSearchPanel.add(categoryComboBox);
@@ -118,10 +118,10 @@ public class ListSupplyUI extends AdminFrame {
         SupplyDAO dao = new SupplyDAO();
         tableModel.setRowCount(0); // 기존 데이터 삭제
         ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
-        addelement(list);
+        addElement(list);
     }
 
-    public void addelement(ArrayList<SupplyProductVO> list) {
+    public void addElement(ArrayList<SupplyProductVO> list) {
         for (SupplyProductVO productVO : list) {
             Vector<Object> v = new Vector<>();
             v.add(SupplyService.encodeSupplyId(productVO.getSupplyId()));
