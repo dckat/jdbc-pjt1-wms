@@ -3,6 +3,8 @@ package com.ssginc.wms.ord;
 import com.mysql.cj.xdevapi.Table;
 
 import javax.swing.table.TableModel;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrdService {
     // 주문 내역 ID를 가져오기 위한 전처리 메소드
@@ -45,5 +47,36 @@ public class OrdService {
             }
         }
         return 0;
+    }
+
+    public static Map<Integer, Integer> getOrderInfo(int[] proIds, int[] ordAmounts) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (int i = 0; i < proIds.length; i++) {
+            if (result.get(proIds[i]) != null) {
+                result.put(proIds[i], result.get(proIds[i]) + ordAmounts[i]);
+            }
+            else {
+                result.put(proIds[i], ordAmounts[i]);
+            }
+        }
+        return result;
+    }
+
+    public static int[] getOrdAmounts(int[] rows, TableModel model) {
+        int[] result = new int[rows.length];
+        for (int i = 0; i < rows.length; i++) {
+            result[i] = Integer.parseInt(String.valueOf(model.getValueAt(rows[i], 4)));
+        }
+        return result;
+    }
+
+    public static boolean checkOrdStatus(int[] rows, TableModel model) {
+        for (int i = 0; i < rows.length; i++) {
+            String status = model.getValueAt(rows[i], 7).toString();
+            if (status.equals("completed")) {
+                return false;
+            }
+        }
+        return true;
     }
 }
