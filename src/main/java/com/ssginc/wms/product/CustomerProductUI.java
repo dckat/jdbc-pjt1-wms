@@ -5,6 +5,7 @@ import com.ssginc.wms.incomeApply.IncomeApplyDAO;
 import com.ssginc.wms.incomeApply.IncomeApplyVO;
 import com.ssginc.wms.ord.OrdDAO;
 import com.ssginc.wms.ord.OrdVO;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,8 +19,8 @@ public class CustomerProductUI extends CustomerFrame {
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
 
-    public CustomerProductUI(String userId) {
-        super(userId);
+    public CustomerProductUI(String id) {
+        super(id);
         ProductDAO dao = new ProductDAO();
         // JFrame 설정
         setTitle("구매자 재고현황");
@@ -73,7 +74,7 @@ public class CustomerProductUI extends CustomerFrame {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow != -1) {
                 while (true) {
-                    int productId = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+                    int productId = DecodeId.decodeId(productTable.getValueAt(selectedRow, 0).toString());
                     String productName = tableModel.getValueAt(selectedRow, 1).toString();
                     String message = "상품명: " + productName + "\n 주문 수량을 입력하세요:";
                     String input = JOptionPane.showInputDialog(this, message,
@@ -97,7 +98,7 @@ public class CustomerProductUI extends CustomerFrame {
                                     ordVo.setProductId(productId);
                                     ordVo.setOrderAmount(amount);
                                     ordVo.setOrderTime(LocalDateTime.now());
-                                    ordVo.setUserId("user1");
+                                    ordVo.setUserId(id);
                                     ordDao.insertOrder(ordVo);
                                     JOptionPane.showMessageDialog(this, "주문이 접수되었습니다.");
                                 }
@@ -108,7 +109,7 @@ public class CustomerProductUI extends CustomerFrame {
                                     IncomeApplyVO incomeApplyVO = new IncomeApplyVO();
 
                                     incomeApplyVO.setProductId(productId); // 선택된 상품 ID
-                                    incomeApplyVO.setUserId("user1");
+                                    incomeApplyVO.setUserId(id);
                                     incomeApplyVO.setApplyTime(LocalDateTime.now()); // 현재 시간
 
                                     // 입고 신청 데이터를 삽입
