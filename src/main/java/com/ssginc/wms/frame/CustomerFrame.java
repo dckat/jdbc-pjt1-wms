@@ -1,6 +1,9 @@
 package com.ssginc.wms.frame;
 
+import com.ssginc.wms.incomeApply.UserIncomeApplyHistoryUI;
+import com.ssginc.wms.ord.OrdCustomerUI;
 import com.ssginc.wms.product.ProductDAO;
+import com.ssginc.wms.product.UserProductUI;
 import com.ssginc.wms.user.LoginFrameUI;
 import com.ssginc.wms.user.UserDAO;
 import com.ssginc.wms.user.UserVO;
@@ -88,9 +91,18 @@ public class CustomerFrame extends JFrame {
         leftPanel.setPreferredSize(new Dimension(150, 600));
         add(leftPanel, BorderLayout.WEST);
 
-        invenUIButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "재고현황 버튼 클릭됨"));
-        ordHistoryButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "주문내역 버튼 클릭됨"));
-        incomeHistoryButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "입고신청 내역 버튼 클릭됨"));
+        invenUIButton.addActionListener(e -> {
+            this.dispose();
+            new UserProductUI(loggedInUserId);
+        });
+        ordHistoryButton.addActionListener(e -> {
+            this.dispose();
+            new OrdCustomerUI(loggedInUserId);
+        });
+        incomeHistoryButton.addActionListener(e -> {
+            this.dispose();
+            new UserIncomeApplyHistoryUI(loggedInUserId);
+        });
     }
 
     public void UpdateUserFrame(String loggedInUserId, CustomerFrame parentFrame) {
