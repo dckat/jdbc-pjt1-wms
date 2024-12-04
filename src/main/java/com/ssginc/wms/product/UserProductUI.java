@@ -18,8 +18,8 @@ public class UserProductUI extends CustomerFrame {
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
 
-    public UserProductUI() {
-        super();
+    public UserProductUI(String userId) {
+        super(userId);
         ProductDAO dao = new ProductDAO();
         // JFrame 설정
         setTitle("구매자 재고현황");
