@@ -60,6 +60,48 @@ public class OrdDAO {
         }
     }
 
+    public ArrayList<OrdProductVO> getAdminListByPeriod(String mode) {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
+                     "p.category_id category_id, category_name, ord_price, ord_amount, " +
+                     "(ord_price * ord_amount) total_price, " +
+                     "ord_time, ord_status " +
+                     "FROM product p " +
+                     "INNER JOIN ord o " +
+                     "ON p.product_id = o.product_id " +
+                     "INNER JOIN product_category pc " +
+                     "ON p.category_id = pc.category_id " +
+                     "WHERE ord_time BETWEEN SUBDATE(NOW(), INTERVAL " +
+                     switch(mode) {
+                         case "1week" -> "1 WEEK) ";
+                         case "1month" -> "1 MONTH) ";
+                         case "3months" -> "3 MONTH) ";
+                         default -> null;
+                     } +
+                     "AND NOW() AND user_id NOT LIKE '%\\_%' " +
+                     "ORDER BY ord_time DESC")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                ArrayList<OrdProductVO> list = new ArrayList<>();
+                while (rs.next()) {
+                    OrdProductVO vo = new OrdProductVO();
+                    vo.setOrderId(rs.getInt("ord_id"));
+                    vo.setProductId(rs.getInt("product_id"));
+                    vo.setProductName(rs.getString("product_name"));
+                    vo.setOrderPrice(rs.getInt("ord_price"));
+                    vo.setOrderAmount(rs.getInt("ord_amount"));
+                    vo.setTotalPrice(rs.getInt("total_price"));
+                    vo.setOrderTime(rs.getTimestamp("ord_time").toLocalDateTime());
+                    vo.setOrderStatus(rs.getString("ord_status"));
+                    list.add(vo);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public ArrayList<OrdProductVO> listByUserId(String userId) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
