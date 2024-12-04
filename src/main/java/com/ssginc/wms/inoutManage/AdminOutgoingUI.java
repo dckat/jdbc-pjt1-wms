@@ -1,80 +1,26 @@
-package com.ssginc.wms.inoutcomeManagement;
-import com.ssginc.wms.inoutcomeManagement.SupplyDAO;
+package com.ssginc.wms.inoutManage;
+import com.ssginc.wms.frame.AdminFrame;
+import com.ssginc.wms.ord.OrdDAO;
 import com.ssginc.wms.product.ProductService;
-import com.ssginc.wms.supply.SupplyProductVO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-public class AdminOutcomeUI extends JFrame {
+public class AdminOutgoingUI extends AdminFrame {
     private JTable table;
     private OrdDAO ordDAO;
     Color color = new Color(0x615959);
     private DefaultTableModel model;
-    private List<OutComeProductVO> ordList;
+    private List<OutgoingProductVO> ordList;
 
 
-    public AdminOutcomeUI() {
-        ordDAO = new OrdDAO();
-        setBounds(100, 100, 800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+    public AdminOutgoingUI(String id) {
+        super(id);
         Font fontT  = new Font("맑은 고딕", Font.BOLD, 16);
-
-        // Top Panel
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(1200, 30));
-        JButton dropdownButton = new JButton("≡");
-        dropdownButton.setSize(30, 30);
-
-        // JPopupMenu 생성
-        JPopupMenu menu = new JPopupMenu();
-        JMenuItem logoutItem = new JMenuItem("로그아웃");
-        JMenuItem editInfoItem = new JMenuItem("회원정보수정");
-        JMenuItem deleteAccountItem = new JMenuItem("회원탈퇴");
-        menu.add(logoutItem);
-        menu.add(editInfoItem);
-        menu.add(deleteAccountItem);
-        dropdownButton.addActionListener(e -> menu.show(dropdownButton, 0, dropdownButton.getHeight()));
-
-        JLabel welcomeLabel = new JLabel("< " + "admin" + " > 님 환영합니다.     ", SwingConstants.RIGHT);
-        topPanel.add(welcomeLabel, BorderLayout.CENTER);
-        topPanel.setBackground(Color.GRAY);
-        topPanel.add(dropdownButton, BorderLayout.EAST);
-        dropdownButton.setBackground(Color.LIGHT_GRAY);
-        add(topPanel, BorderLayout.NORTH);
-
-        // Left Panel
-        JPanel leftPanel = new JPanel(new GridLayout(6, 1, 10, 10));
-        JLabel llabel = new JLabel("");
-        JButton invenUIButton = new JButton("재 고  현 황");
-        invenUIButton.setBackground(color);
-        invenUIButton.setFont(fontT);
-        JButton ioUIButton = new JButton("입출고 현황");
-        ioUIButton.setBackground(color);
-        ioUIButton.setFont(fontT);
-        JButton incomeButton = new JButton("입고신청 관리");
-        incomeButton.setBackground(color);
-        incomeButton.setFont(fontT);
-        JButton ordButton = new JButton("주 문  관 리");
-        ordButton.setBackground(color);
-        ordButton.setFont(fontT);
-        JButton purordButton = new JButton("발 주  관 리");
-        purordButton.setBackground(color);
-        purordButton.setFont(fontT);
-        leftPanel.add(llabel);
-        leftPanel.add(invenUIButton);
-        leftPanel.add(ioUIButton);
-        leftPanel.add(incomeButton);
-        leftPanel.add(ordButton);
-        leftPanel.add(purordButton);
-        leftPanel.setPreferredSize(new Dimension(150, 600));
-        add(leftPanel, BorderLayout.WEST);
 
         // Center Panel (with column dropdown and filter button)
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -96,6 +42,7 @@ public class AdminOutcomeUI extends JFrame {
         filterPanel.add(refreshButton);
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
+        ordDAO = new OrdDAO();
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
 
@@ -121,7 +68,7 @@ public class AdminOutcomeUI extends JFrame {
 
         outStockButton.addActionListener(e -> {
             dispose();
-            new AdminIncomeUI();
+            new AdminIncomeUI(id);
         });
 
         // Add filter functionality to the filter button
@@ -132,7 +79,7 @@ public class AdminOutcomeUI extends JFrame {
 
             // Filter the table based on the selected column and filter text
             DefaultTableModel filteredModel = new DefaultTableModel(columnNames, 0);
-            for (OutComeProductVO ord : ordList) {
+            for (OutgoingProductVO ord : ordList) {
                 // Add condition based on selected column
                 String cellValue = "";
                 switch (columnIndex) {
@@ -164,6 +111,7 @@ public class AdminOutcomeUI extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // 프레임 표시
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -173,9 +121,9 @@ public class AdminOutcomeUI extends JFrame {
 
         // 테이블에 데이터 추가
         ordList = ordDAO.getCompletedOrders();
-        for (OutComeProductVO ord : ordList) {
+        for (OutgoingProductVO ord : ordList) {
             Vector<Object> v = new Vector<>();
-            v.add(InoutcomeManagementService.encodeOutcomeId(ord.getOrdId()));
+            v.add(InOutManageService.encodeOutcomeId(ord.getOrdId()));
             v.add(ord.getOrdAmount());
             v.add(ProductService.encodeProductId(ord.getProductId()));
             v.add(ord.getOrdCompleteTime());

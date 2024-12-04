@@ -5,6 +5,7 @@ import com.ssginc.wms.incomeApply.IncomeApplyDAO;
 import com.ssginc.wms.incomeApply.IncomeApplyVO;
 import com.ssginc.wms.ord.OrdDAO;
 import com.ssginc.wms.ord.OrdVO;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,13 +14,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class UserProductUI extends CustomerFrame {
+public class CustomerProductUI extends CustomerFrame {
     private JTable productTable;
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
 
-    public UserProductUI(String userId) {
-        super(userId);
+    public CustomerProductUI(String id) {
+        super(id);
         ProductDAO dao = new ProductDAO();
         // JFrame 설정
         setTitle("구매자 재고현황");
@@ -39,7 +40,7 @@ public class UserProductUI extends CustomerFrame {
         tableModel = new DefaultTableModel(new String[]{"상품코드", "상품이름", "분류코드", "분류이름", "상품단가", "재고수량"}, 0);
         productTable = new JTable(tableModel);
 
-        ArrayList<UserProductVO> proList = dao.listUserProduct();
+        ArrayList<CustomerProductVO> proList = dao.listUserProduct();
         addElement(proList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
@@ -65,7 +66,7 @@ public class UserProductUI extends CustomerFrame {
                 default -> null;
             };
 
-            ArrayList<UserProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
+            ArrayList<CustomerProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
             addElement(filteredList);
         });
 
@@ -73,7 +74,7 @@ public class UserProductUI extends CustomerFrame {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow != -1) {
                 while (true) {
-                    int productId = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+                    int productId = DecodeId.decodeId(productTable.getValueAt(selectedRow, 0).toString());
                     String productName = tableModel.getValueAt(selectedRow, 1).toString();
                     String message = "상품명: " + productName + "\n 주문 수량을 입력하세요:";
                     String input = JOptionPane.showInputDialog(this, message,
@@ -97,7 +98,7 @@ public class UserProductUI extends CustomerFrame {
                                     ordVo.setProductId(productId);
                                     ordVo.setOrderAmount(amount);
                                     ordVo.setOrderTime(LocalDateTime.now());
-                                    ordVo.setUserId("user1");
+                                    ordVo.setUserId(id);
                                     ordDao.insertOrder(ordVo);
                                     JOptionPane.showMessageDialog(this, "주문이 접수되었습니다.");
                                 }
@@ -108,7 +109,7 @@ public class UserProductUI extends CustomerFrame {
                                     IncomeApplyVO incomeApplyVO = new IncomeApplyVO();
 
                                     incomeApplyVO.setProductId(productId); // 선택된 상품 ID
-                                    incomeApplyVO.setUserId("user1");
+                                    incomeApplyVO.setUserId(id);
                                     incomeApplyVO.setApplyTime(LocalDateTime.now()); // 현재 시간
 
                                     // 입고 신청 데이터를 삽입
@@ -131,11 +132,12 @@ public class UserProductUI extends CustomerFrame {
         });
 
         // JFrame 표시
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    public void addElement(ArrayList<UserProductVO> list) {
-        for (UserProductVO data: list) {
+    public void addElement(ArrayList<CustomerProductVO> list) {
+        for (CustomerProductVO data: list) {
             Vector<Object> v = new Vector<>();
             v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
