@@ -27,7 +27,7 @@ public class OrdAdminUI extends AdminFrame {
 
         // Center Panel
         JPanel centerPanel = new JPanel(new BorderLayout());
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton oneWeekButton = new JButton("최근 1주");
         JButton oneMonthButton = new JButton("최근 1개월");
         JButton threeMonthsButton = new JButton("최근 3개월");
@@ -50,7 +50,7 @@ public class OrdAdminUI extends AdminFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // Bottom Panel
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel blabel = new JLabel("");
         JButton approveButton = new JButton("주문 승인");
         bottomPanel.add(blabel);

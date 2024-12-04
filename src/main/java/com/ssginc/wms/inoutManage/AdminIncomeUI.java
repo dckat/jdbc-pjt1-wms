@@ -25,7 +25,7 @@ public class AdminIncomeUI extends AdminFrame {
 
         // Center Panel (with column dropdown and filter button)
         JPanel centerPanel = new JPanel(new BorderLayout());
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
@@ -38,12 +38,10 @@ public class AdminIncomeUI extends AdminFrame {
         JComboBox<String> columnDropdown = new JComboBox<>(columnNames2);
         JTextField filterField = new JTextField(15);
         JButton filterButton = new JButton("검색");
-        JButton refreshButton = new JButton("새로고침");  // 새로고침 버튼 추가
 
         filterPanel.add(columnDropdown);
         filterPanel.add(filterField);
         filterPanel.add(filterButton);
-        filterPanel.add(refreshButton);  // 새로고침 버튼을 filterPanel에 추가
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         supplyDAO = new SupplyDAO();
@@ -58,17 +56,11 @@ public class AdminIncomeUI extends AdminFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // 하단에 출고 현황 버튼과 새로고침 버튼을 추가하는 부분
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  // 버튼을 중앙에 배치
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));  // 버튼을 우측에 배치
         JButton outStockButton = new JButton("출고 현황");
         bottomPanel.add(outStockButton);  // 출고 현황 버튼 추가
-        bottomPanel.add(refreshButton);  // 새로고침 버튼 추가
         centerPanel.add(bottomPanel, BorderLayout.SOUTH);  // centerPanel의 하단에 버튼을 배치
         add(bottomPanel, BorderLayout.SOUTH);
-
-        refreshButton.addActionListener(e -> {
-            model.setRowCount(0);
-            addIncomeElement();
-        });
 
         outStockButton.addActionListener(e -> {
             dispose();
@@ -100,7 +92,7 @@ public class AdminIncomeUI extends AdminFrame {
                             supply.getSupplyPrice(),
                             supply.getSupplyAmount(),
                             supply.getTotalPrice(),
-                            supply.getSupplyTime()
+                            supply.getSupplyTime().toLocalDate()
                     };
                     filteredModel.addRow(row);
                 }
@@ -130,7 +122,7 @@ public class AdminIncomeUI extends AdminFrame {
             v.add(supply.getSupplyPrice());
             v.add(supply.getSupplyAmount());
             v.add(supply.getTotalPrice());
-            v.add(supply.getSupplyTime());
+            v.add(supply.getSupplyTime().toLocalDate());
             model.addRow(v);
         }
     }

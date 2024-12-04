@@ -7,6 +7,7 @@ import com.ssginc.wms.product.ProductService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -76,7 +77,7 @@ public class ListSupplyUI extends AdminFrame {
                 if (columnIndex == 0 || columnIndex == 1 || columnIndex == 4 || columnIndex == 5) {
                     return Integer.class;
                 } else if (columnIndex == 6) {
-                    return LocalDateTime.class;
+                    return LocalDate.class;
                 } else {
                     return String.class;
                 }
@@ -131,7 +132,7 @@ public class ListSupplyUI extends AdminFrame {
                 v.add(productVO.getCategoryName());
                 v.add(productVO.getSupplyPrice());
                 v.add(productVO.getSupplyAmount());
-                v.add(productVO.getSupplyTime());
+                v.add(productVO.getSupplyTime().toLocalDate());
                 tableModel.addRow(v);
             }
         }
@@ -152,7 +153,7 @@ public class ListSupplyUI extends AdminFrame {
             v.add(productVO.getCategoryName());
             v.add(productVO.getSupplyPrice());
             v.add(productVO.getSupplyAmount());
-            v.add(productVO.getSupplyTime());
+            v.add(productVO.getSupplyTime().toLocalDate());
             tableModel.addRow(v);
         }
     }

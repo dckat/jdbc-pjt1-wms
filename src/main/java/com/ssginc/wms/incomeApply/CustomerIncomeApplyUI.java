@@ -32,36 +32,22 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
         // 상단 패널 (검색 필터 및 버튼)
         JPanel centerPanel = new JPanel(new BorderLayout());
-
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        // 드롭다운 (컬럼 선택)
-        String[] columns = {"상품이름", "분류이름"};
-        JComboBox<String> columnComboBox = new JComboBox<>(columns);
-        filterPanel.add(columnComboBox);
+        yearButton = new JButton("최근 1년");
+        monthButton = new JButton("최근 1개월");
+        weekButton = new JButton("최근 1주일"); // 드롭다운 (컬럼 선택)
 
-        // 검색어 입력 필드
-        JTextField searchField = new JTextField(15);
-        filterPanel.add(searchField);
-
-        // 검색 버튼
-        JButton searchButton = new JButton("검색");
-        filterPanel.add(searchButton);
-
-        // 새로고침 버튼
-        JButton refreshButton = new JButton("새로고침");
-        filterPanel.add(refreshButton);
-
-        // 삭제 버튼
-        JButton deleteButton = new JButton("입고 취소");
-        filterPanel.add(deleteButton);
+        filterPanel.add(weekButton);
+        filterPanel.add(monthButton);
+        filterPanel.add(yearButton);
 
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
 
         // 테이블 초기화 (체크박스를 추가)
         tableModel = new DefaultTableModel(new String[]{
-                "신청코드", "상품코드", "분류이름", "상품이름", "신청시간", "신청상태"
+                "신청코드", "상품코드", "분류이름", "상품이름", "신청일", "신청상태"
         }, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -74,40 +60,13 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         centerPanel.add(incomeScrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
 
-
-        // 검색 버튼 이벤트
-        searchButton.addActionListener(e -> {
-            String selectedColumn = (String) columnComboBox.getSelectedItem();
-            String searchText = searchField.getText().trim().toLowerCase();
-
-            if (selectedColumn != null && !searchText.isEmpty()) {
-                String column = "";
-                // 선택된 컬럼에 맞게 DB 컬럼명 매핑
-                switch (selectedColumn) {
-                    case "상품이름":
-                        column = "p.product_name";
-                        break;
-                    case "분류이름":
-                        column = "pc.category_name";
-                        break;
-                }
-                // 검색된 데이터 로드
-                loadIncomeApplyDataWithSearch(column, searchText);
-            }
-        });
-
         // 날짜 필터 버튼 추가
-        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        yearButton = new JButton("1년");
-        monthButton = new JButton("1달");
-        weekButton = new JButton("1주");
-        datePanel.add(yearButton);
-        datePanel.add(monthButton);
-        datePanel.add(weekButton);
-        add(datePanel, BorderLayout.SOUTH);
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        // 새로고침 버튼 이벤트
-        refreshButton.addActionListener(e -> loadIncomeApplyData());
+        // 삭제 버튼
+        JButton deleteButton = new JButton("입고신청 취소");
+        bottomPanel.add(deleteButton);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         // 삭제 버튼 이벤트
         deleteButton.addActionListener(e -> deleteSelectedRows());
@@ -136,7 +95,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
             rowData[2] = apply.getCategoryName();
             rowData[3] = apply.getProductName();
-            rowData[4] = apply.getApplyTime();
+            rowData[4] = apply.getApplyTime().toLocalDate();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 
             tableModel.addRow(rowData);
@@ -156,7 +115,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
             rowData[2] = apply.getCategoryName();
             rowData[3] = apply.getProductName();
-            rowData[4] = apply.getApplyTime();
+            rowData[4] = apply.getApplyTime().toLocalDate();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Process -> String 변환
 
             tableModel.addRow(rowData);
@@ -174,7 +133,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
             rowData[2] = apply.getCategoryName();
             rowData[3] = apply.getProductName();
-            rowData[4] = apply.getApplyTime();
+            rowData[4] = apply.getApplyTime().toLocalDate();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 
             tableModel.addRow(rowData);

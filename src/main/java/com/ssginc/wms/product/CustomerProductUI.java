@@ -48,7 +48,7 @@ public class CustomerProductUI extends CustomerFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // Bottom Panel
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel blabel = new JLabel("");
         JButton orderButton = new JButton("주문 하기");
         bottomPanel.add(blabel);
