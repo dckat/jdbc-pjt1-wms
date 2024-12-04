@@ -1,6 +1,7 @@
 package com.ssginc.wms.ord;
 
 import com.mysql.cj.xdevapi.Table;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.table.TableModel;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ public class OrdService {
     public static int[] getOrdIds(int[] rows, TableModel data) {
         int[] result = new int[rows.length];
         for (int i = 0; i < rows.length; i++) {
-            result[i] = decodeOrderId(data.getValueAt(rows[i], 0).toString());
+            result[i] = DecodeId.decodeId(data.getValueAt(rows[i], 0).toString());
         }
         return result;
     }
@@ -37,16 +38,6 @@ public class OrdService {
         sTemp.append(convertedId);
 
         return sTemp.toString();
-    }
-
-    public static int decodeOrderId(String orderId) {
-        for (int i = 0; i < orderId.length(); i++) {
-            char c = orderId.charAt(i);
-            if (Character.isDigit(c) && c > '0' && c <= '9') {
-                return Integer.parseInt(orderId.substring(i));
-            }
-        }
-        return 0;
     }
 
     public static Map<Integer, Integer> getOrderInfo(int[] proIds, int[] ordAmounts) {
