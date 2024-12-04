@@ -1,5 +1,7 @@
 package com.ssginc.wms.user;
 
+import com.ssginc.wms.product.AdminProductUI;
+import com.ssginc.wms.product.UserProductUI;
 import com.ssginc.wms.user.UserVO;
 import com.ssginc.wms.user.UserDAO;
 
@@ -63,13 +65,12 @@ public class LoginFrameUI {
             UserDAO userDAO = new UserDAO();
             UserVO user = userDAO.authenticateUser(id, password);
 
-            /*
             if (user != null) {
                 String grade = user.getUserGrade();
                 if ("admin".equals(grade)) {
-                    new InventoryAdminFrame(user.getUserId());
+                    new AdminProductUI(user.getUserId());
                 } else if ("customer".equals(grade)) {
-                    new InventoryCustomerFrame(user.getUserId());
+                    new UserProductUI(user.getUserId());
                 } else {
                     JOptionPane.showMessageDialog(frame, "알 수 없는 사용자 등급입니다.");
                 }
@@ -77,7 +78,6 @@ public class LoginFrameUI {
             } else {
                 JOptionPane.showMessageDialog(frame, "아이디 또는 비밀번호를 확인하세요.");
             }
-            */
         });
 
         // 하단 버튼 로직

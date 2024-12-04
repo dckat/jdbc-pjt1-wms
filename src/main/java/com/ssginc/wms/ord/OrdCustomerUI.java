@@ -14,7 +14,7 @@ public class OrdCustomerUI extends CustomerFrame {
     private DefaultTableModel tableModel;
 
     public OrdCustomerUI(String userId) {
-        super();
+        super(userId);
         setTitle("주문 내역");
 
         // Center Panel

@@ -15,8 +15,8 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
     private IncomeApplyDAO dao;
     private JButton yearButton, monthButton, weekButton;
 
-    public UserIncomeApplyHistoryUI() {
-        super();
+    public UserIncomeApplyHistoryUI(String userId) {
+        super(userId);
         this.productIncomeService = new ProductIncomeService();
         this.dao = new IncomeApplyDAO();
 
