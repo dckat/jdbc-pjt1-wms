@@ -30,7 +30,7 @@ public class OrdDAO {
         }
     }
 
-    public ArrayList<OrdProductVO> listOrder() {
+    public ArrayList<OrdProductVO> getOrderList() {
         try (Connection con = dataSource.getConnection();
              // 탈퇴한 회원의 주문내역은 나오지 않도록 처리
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
@@ -40,7 +40,7 @@ public class OrdDAO {
                      "FROM ord o " +
                      "INNER JOIN product p " +
                      "ON o.product_id = p.product_id " +
-                     "WHERE o.user_id NOT LIKE '%\\_%'")) {
+                     "WHERE o.user_id NOT LIKE '%\\_%' AND product_status = 'present'")) {
             try (ResultSet rs = ps.executeQuery()) {
                 ArrayList<OrdProductVO> list = new ArrayList<>();
                 while (rs.next()) {
@@ -62,7 +62,7 @@ public class OrdDAO {
         }
     }
 
-    public ArrayList<OrdProductVO> getAdminListByPeriod(String mode) {
+    public ArrayList<OrdProductVO> getAdminOrdListByPeriod(String mode) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
                      "p.category_id category_id, category_name, ord_price, ord_amount, " +
@@ -80,7 +80,7 @@ public class OrdDAO {
                          case "3months" -> "3 MONTH) ";
                          default -> null;
                      } +
-                     "AND NOW() AND user_id NOT LIKE '%\\_%' " +
+                     "AND NOW() AND user_id NOT LIKE '%\\_%' AND product_status = 'present' " +
                      "ORDER BY ord_time DESC")) {
             try (ResultSet rs = ps.executeQuery()) {
                 ArrayList<OrdProductVO> list = new ArrayList<>();
@@ -104,7 +104,7 @@ public class OrdDAO {
     }
 
 
-    public ArrayList<OrdProductVO> listByUserId(String userId) {
+    public ArrayList<OrdProductVO> getOrdListByCustomerId(String userId) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
                      "p.category_id category_id, category_name, ord_price, ord_amount, " +
@@ -115,7 +115,7 @@ public class OrdDAO {
                      "ON p.product_id = o.product_id " +
                      "INNER JOIN product_category pc " +
                      "ON p.category_id = pc.category_id " +
-                     "WHERE user_id = ? " +
+                     "WHERE user_id = ? AND product_status = 'present' " +
                      "ORDER BY ord_time DESC")) {
             ps.setString(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -139,7 +139,7 @@ public class OrdDAO {
         }
     }
 
-    public ArrayList<OrdProductVO> listByPeriod(String userId, String mode) {
+    public ArrayList<OrdProductVO> getCustomerOrdListByUserIdAndPeriod(String userId, String mode) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT ord_id, p.product_id product_id, product_name, " +
                      "p.category_id category_id, category_name, ord_price, ord_amount, " +
@@ -157,7 +157,7 @@ public class OrdDAO {
                          case "3months" -> "3 MONTH) ";
                          default -> null;
                      } +
-                     "AND NOW() and user_id = ? " +
+                     "AND NOW() and user_id = ? AND product_status = 'present' " +
                      "ORDER BY ord_time DESC")) {
             ps.setString(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -181,7 +181,7 @@ public class OrdDAO {
         }
     }
 
-    public int deleteOrder(int[] ordId) {
+    public int deleteOrd(int[] ordId) {
         try {
             Connection con = dataSource.getConnection();
             try(PreparedStatement ps = con.prepareStatement("DELETE FROM ord WHERE ord_id = ?")) {
@@ -207,7 +207,7 @@ public class OrdDAO {
         return 0;
     }
 
-    public void updateOrderStatus(int[] ordIds, int[] ordAmounts) {
+    public void updateOrdStatus(int[] ordIds, int[] ordAmounts) {
         try {
             Connection con = dataSource.getConnection();
             try(PreparedStatement ps = con.prepareStatement("UPDATE ord o INNER JOIN product p " +
@@ -236,7 +236,7 @@ public class OrdDAO {
     }
 
     // 출고 현황 조회 메서드
-    public List<OutgoingProductVO> getCompletedOrders() {
+    public List<OutgoingProductVO> getCompletedOrd() {
         String sql = """
             SELECT 
                 o.ord_id AS ordId,

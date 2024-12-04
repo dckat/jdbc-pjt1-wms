@@ -28,8 +28,8 @@ public class AdminOutgoingUI extends AdminFrame {
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
-                "출고 코드", "출고량", "상품 코드", "출고일", "상품 이름",
-                "출고 단가", "카테고리 이름"
+                "상품 이름",
+                "카테고리 이름"
         };
         JComboBox<String> columnDropdown = new JComboBox<>(columnNames);
         JTextField filterField = new JTextField(15);
@@ -120,7 +120,7 @@ public class AdminOutgoingUI extends AdminFrame {
         model.setRowCount(0);
 
         // 테이블에 데이터 추가
-        ordList = ordDAO.getCompletedOrders();
+        ordList = ordDAO.getCompletedOrd();
         for (OutgoingProductVO ord : ordList) {
             Vector<Object> v = new Vector<>();
             v.add(InOutManageService.encodeOutcomeId(ord.getOrdId()));

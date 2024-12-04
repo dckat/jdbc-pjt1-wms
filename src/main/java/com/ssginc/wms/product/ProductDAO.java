@@ -25,7 +25,7 @@ public class ProductDAO {
                      "c.category_id category_id, category_name, ord_price, product_amount\n" +
                      "FROM product p\n" +
                      "INNER JOIN product_category c\n" +
-                     "ON p.category_id = c.category_id")) {
+                     "ON p.category_id = c.category_id WHERE product_status = 'present'")) {
             try (ResultSet rs = ps.executeQuery()) {
                 ArrayList<CustomerProductVO> list = new ArrayList<>();
                 while (rs.next()) {
@@ -54,7 +54,7 @@ public class ProductDAO {
                      "FROM product p\n" +
                      "INNER JOIN product_category c\n" +
                      "ON p.category_id = c.category_id\n" +
-                     "WHERE " + selected + " like ?")) {
+                     "WHERE " + selected + " like ? AND product_status = 'present'")) {
             ps.setString(1, "%" + keyword + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 ArrayList<CustomerProductVO> list = new ArrayList<>();
@@ -192,7 +192,7 @@ public class ProductDAO {
     public Map<Integer, Integer> getAmountById() {
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT product_id, product_amount " +
-                     "FROM product")) {
+                     "FROM product WHERE product_status = 'present'")) {
             try (ResultSet rs = ps.executeQuery()) {
                 Map<Integer, Integer> proMap = new HashMap<>();
                 while (rs.next()) {

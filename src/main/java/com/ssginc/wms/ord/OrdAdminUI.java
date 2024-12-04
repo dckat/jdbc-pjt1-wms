@@ -42,7 +42,7 @@ public class OrdAdminUI extends AdminFrame {
         productTable = new JTable(tableModel);
         productTable.setFont(fontT);
 
-        ArrayList<OrdProductVO> ordList = ordDao.listOrder();
+        ArrayList<OrdProductVO> ordList = ordDao.getOrderList();
         addOrdElement(ordList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
@@ -59,19 +59,19 @@ public class OrdAdminUI extends AdminFrame {
 
         oneWeekButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("1week");
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminOrdListByPeriod("1week");
             addOrdElement(filteredList);
         });
 
         oneMonthButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("1month");
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminOrdListByPeriod("1month");
             addOrdElement(filteredList);
         });
 
         threeMonthsButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("3months");;
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminOrdListByPeriod("3months");;
             addOrdElement(filteredList);
         });
 
@@ -96,7 +96,7 @@ public class OrdAdminUI extends AdminFrame {
                 JOptionPane.showMessageDialog(this, "재고량이 부족하여 승인할 수 없습니다.");
                 return;
             }
-            ordDao.updateOrderStatus(ordIds, ordAmounts);
+            ordDao.updateOrdStatus(ordIds, ordAmounts);
 
             this.dispose();
             new OrdAdminUI(id);
@@ -109,7 +109,7 @@ public class OrdAdminUI extends AdminFrame {
     public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(OrdService.encodeOrderId(data.getOrderId()));
+            v.add(OrdService.encodeOrdId(data.getOrderId()));
             v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
             v.add(data.getOrderPrice());

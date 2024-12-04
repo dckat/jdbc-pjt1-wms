@@ -128,7 +128,7 @@ public class SupplyUI extends AdminFrame {
     public void loadProductData(String selectedColumn, String searchKeyword) {
         tableModel.setRowCount(0); // 기존 데이터 삭제
 
-        List<CategoryProductVO> products = supplyDAO.listSupplies(selectedColumn, searchKeyword);
+        List<CategoryProductVO> products = supplyDAO.listSupplyByKeyword(selectedColumn, searchKeyword);
 
         for (CategoryProductVO product : products) {
             tableModel.addRow(new Object[]{
@@ -183,7 +183,7 @@ public class SupplyUI extends AdminFrame {
             supplyVO.setSupplyAmount(supplyAmount);
 
             // DAO 메서드를 호출하여 발주를 등록합니다.
-            supplyDAO.registerSupply(supplyVO);
+            supplyDAO.insertSupply(supplyVO);
 
             JOptionPane.showMessageDialog(this, "발주가 성공적으로 등록되었습니다.");
             loadProductData("전체", ""); // 테이블 데이터를 새로고침합니다.

@@ -35,7 +35,7 @@ public class OrdCustomerUI extends CustomerFrame {
         productTable = new JTable(tableModel);
 
         OrdDAO dao = new OrdDAO();
-        ArrayList<OrdProductVO> ordList = dao.listByUserId(userId);
+        ArrayList<OrdProductVO> ordList = dao.getOrdListByCustomerId(userId);
         addOrdElement(ordList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
@@ -52,19 +52,19 @@ public class OrdCustomerUI extends CustomerFrame {
 
         oneWeekButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = dao.listByPeriod(userId, "1week");
+            ArrayList<OrdProductVO> filteredList = dao.getCustomerOrdListByUserIdAndPeriod(userId, "1week");
             addOrdElement(filteredList);
         });
 
         oneMonthButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = dao.listByPeriod(userId, "1month");
+            ArrayList<OrdProductVO> filteredList = dao.getCustomerOrdListByUserIdAndPeriod(userId, "1month");
             addOrdElement(filteredList);
         });
 
         threeMonthsButton.addActionListener(e -> {
             tableModel.setRowCount(0);
-            ArrayList<OrdProductVO> filteredList = dao.listByPeriod(userId, "3months");
+            ArrayList<OrdProductVO> filteredList = dao.getCustomerOrdListByUserIdAndPeriod(userId, "3months");
             addOrdElement(filteredList);
         });
 
@@ -78,7 +78,7 @@ public class OrdCustomerUI extends CustomerFrame {
             }
 
             int[] ordIds = OrdService.getOrdIds(rows, data);
-            int row = dao.deleteOrder(ordIds);
+            int row = dao.deleteOrd(ordIds);
 
             if (row > 0) {
                 JOptionPane.showMessageDialog(this, "주문 내역이 삭제되었습니다.");
@@ -95,7 +95,7 @@ public class OrdCustomerUI extends CustomerFrame {
     public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(OrdService.encodeOrderId(data.getOrderId()));
+            v.add(OrdService.encodeOrdId(data.getOrderId()));
             v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
             v.add(data.getOrderPrice());

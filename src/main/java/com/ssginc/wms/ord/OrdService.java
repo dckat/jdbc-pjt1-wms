@@ -1,6 +1,5 @@
 package com.ssginc.wms.ord;
 
-import com.mysql.cj.xdevapi.Table;
 import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.table.TableModel;
@@ -17,7 +16,7 @@ public class OrdService {
         return result;
     }
 
-    public static String encodeOrderId(int ordId) {
+    public static String encodeOrdId(int ordId) {
         StringBuilder sTemp = new StringBuilder();
         sTemp.append("O");      // 주문코드는 알파벳 O로 시작
         String convertedId = String.valueOf(ordId);
