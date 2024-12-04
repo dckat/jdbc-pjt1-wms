@@ -123,8 +123,6 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
         // 초기 데이터 로드
         loadIncomeApplyData();
 
-        // JFrame 표시
-        setLocationRelativeTo(null);
         setVisible(true);
     }
 

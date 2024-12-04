@@ -1,5 +1,6 @@
 package com.ssginc.wms.ord;
 
+import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.product.ProductDAO;
 import com.ssginc.wms.product.ProductService;
 
@@ -11,66 +12,18 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Vector;
 
-public class OrdAdminUI extends JFrame {
+public class OrdAdminUI extends AdminFrame {
     private JTable productTable;
     private DefaultTableModel tableModel;
     Color color = new Color(0x615959);
     OrdDAO ordDao = new OrdDAO();
     ProductDAO productDao = new ProductDAO();
 
-    public OrdAdminUI() {
+    public OrdAdminUI(String id) {
         // JFrame 설정
+        super(id);
         setTitle("주문 관리");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 1000);
-        setLayout(new BorderLayout()); // 기본 레이아웃 설정
         Font fontT  = new Font("맑은 고딕", Font.BOLD, 16);
-
-        // Top Panel
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(1200, 30));
-        JButton dropdownButton = new JButton("≡");
-        dropdownButton.setSize(30, 30);
-
-        JLabel welcomeLabel = new JLabel("< " + "admin" + " > 님 환영합니다.     ", SwingConstants.RIGHT);
-        topPanel.add(welcomeLabel, BorderLayout.CENTER);
-        topPanel.setBackground(Color.GRAY);
-        topPanel.add(dropdownButton, BorderLayout.EAST);
-        dropdownButton.setBackground(Color.LIGHT_GRAY);
-        add(topPanel, BorderLayout.NORTH);
-
-        // Left Panel
-        JPanel leftPanel = new JPanel(new GridLayout(6, 1, 10, 10));
-        JLabel llabel = new JLabel("");
-        JButton invenUIButton = new JButton("재 고  현 황");
-        invenUIButton.setBackground(color);
-        // invenUIButton.setForeground(Color.white);
-        invenUIButton.setFont(fontT);
-        JButton ioUIButton = new JButton("입출고 현황");
-        ioUIButton.setBackground(color);
-        // ioUIButton.setForeground(Color.white);
-        ioUIButton.setFont(fontT);
-        JButton incomeButton = new JButton("입고신청 관리");
-        incomeButton.setBackground(color);
-        // incomeButton.setForeground(Color.white);
-        incomeButton.setFont(fontT);
-        JButton ordButton = new JButton("주 문  관 리");
-        ordButton.setBackground(color);
-        // ordButton.setForeground(Color.white);
-        ordButton.setFont(fontT);
-        JButton purordButton = new JButton("발 주  관 리");
-        purordButton.setBackground(color);
-        // purordButton.setForeground(Color.white);
-        purordButton.setFont(fontT);
-        //leftPanel.add(imageLabel);
-        leftPanel.add(llabel);
-        leftPanel.add(invenUIButton);
-        leftPanel.add(ioUIButton);
-        leftPanel.add(incomeButton);
-        leftPanel.add(ordButton);
-        leftPanel.add(purordButton);
-        leftPanel.setPreferredSize(new Dimension(150, 600));
-        add(leftPanel, BorderLayout.WEST);
 
         // Center Panel
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -146,7 +99,7 @@ public class OrdAdminUI extends JFrame {
             ordDao.updateOrderStatus(ordIds, ordAmounts);
 
             this.dispose();
-            new OrdAdminUI();
+            new OrdAdminUI(id);
         });
 
         setVisible(true);
