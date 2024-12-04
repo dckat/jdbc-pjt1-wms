@@ -79,11 +79,12 @@ public class ProductDAO {
     // 상품 목록 조회
     public List<ProductVO> getProducts(String columnName, String searchKeyword) {
         List<ProductVO> productList = new ArrayList<>();
-        String query = "SELECT * FROM product";
+        String query = "SELECT * FROM product where ";
 
         if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += " WHERE " + columnName + " = ?";
+            query += " WHERE " + columnName + " = ? and ";
         }
+        query += "product_status = 'present'";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -153,7 +154,7 @@ public class ProductDAO {
 
     // 상품 삭제
     public boolean deleteProduct(int productId) {
-        String deleteQuery = "DELETE FROM product WHERE product_id = ?";
+        String deleteQuery = "UPDATE product SET product_status = 'deleted' WHERE product_id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
             pstmt.setInt(1, productId);
@@ -165,7 +166,7 @@ public class ProductDAO {
     }
 
     public ProductVO getProductById(int productId) {
-        String query = "SELECT * FROM product WHERE product_id = ?";
+        String query = "SELECT * FROM product WHERE product_id = ? and product_status = 'present'";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
