@@ -5,17 +5,19 @@ import com.ssginc.wms.supply.SupplyProductVO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
-public class ManagerIncomeUI extends JFrame {
+public class AdminIncomeUI extends JFrame {
     private JTable table;
     private SupplyDAO supplyDAO;
     Color color = new Color(0x615959);
     private DefaultTableModel model;  // 테이블 모델을 클래스 변수로 선언
     private List<SupplyProductVO> supplyList;  // 원본 데이터를 저장할 리스트
 
-    public ManagerIncomeUI() {
+    public AdminIncomeUI() {
         supplyDAO = new SupplyDAO();
         setBounds(100, 100, 800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,12 +77,6 @@ public class ManagerIncomeUI extends JFrame {
         // Center Panel (with column dropdown and filter button)
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton oneWeekButton = new JButton("최근 1주");
-        JButton oneMonthButton = new JButton("최근 1개월");
-        JButton threeMonthsButton = new JButton("최근 3개월");
-        filterPanel.add(oneWeekButton);
-        filterPanel.add(oneMonthButton);
-        filterPanel.add(threeMonthsButton);
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
@@ -98,31 +94,15 @@ public class ManagerIncomeUI extends JFrame {
         filterPanel.add(refreshButton);  // 새로고침 버튼을 filterPanel에 추가
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
-        // JTable에 표시할 데이터 준비
-        supplyList = supplyDAO.getSuppliesWithProductAndCategory();
-
-        // 테이블 모델 생성
         model = new DefaultTableModel(columnNames, 0);
+        table = new JTable(model);
 
-        // 테이블에 데이터 추가
-        for (SupplyProductVO supply : supplyList) {
-            Object[] row = new Object[] {
-                    supply.getSupplyId(),
-                    supply.getProductId(),
-                    supply.getProductName(),
-                    supply.getCategoryName(),
-                    supply.getSupplyPrice(),
-                    supply.getSupplyAmount(),
-                    supply.getTotalPrice(),
-                    supply.getSupplyTime()
-            };
-            model.addRow(row);
-        }
+        addIncomeElement();
 
         // JTable 생성
-        table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
 
         // 하단에 출고 현황 버튼과 새로고침 버튼을 추가하는 부분
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  // 버튼을 중앙에 배치
@@ -130,10 +110,16 @@ public class ManagerIncomeUI extends JFrame {
         bottomPanel.add(outStockButton);  // 출고 현황 버튼 추가
         bottomPanel.add(refreshButton);  // 새로고침 버튼 추가
         centerPanel.add(bottomPanel, BorderLayout.SOUTH);  // centerPanel의 하단에 버튼을 배치
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        refreshButton.addActionListener(e -> {
+            model.setRowCount(0);
+            addIncomeElement();
+        });
 
         outStockButton.addActionListener(e -> {
             dispose();
-            new ManagerOutcomeUI();
+            new AdminOutcomeUI();
         });
 
         // Add filter functionality to the filter button
@@ -175,28 +161,29 @@ public class ManagerIncomeUI extends JFrame {
             table.setModel(filteredModel);  // Update table with filtered data
         });
 
-        // 새로고침 버튼 클릭 이벤트 처리
-        refreshButton.addActionListener(e -> {
-            // 테이블 모델을 원본 데이터로 갱신
-            model.setRowCount(0);  // 기존 데이터 제거
-            for (SupplyProductVO supply : supplyList) {
-                Object[] row = new Object[] {
-                        supply.getSupplyId(),
-                        supply.getProductId(),
-                        supply.getProductName(),
-                        supply.getCategoryName(),
-                        supply.getSupplyPrice(),
-                        supply.getSupplyAmount(),
-                        supply.getTotalPrice(),
-                        supply.getSupplyTime()
-                };
-                model.addRow(row);
-            }
-        });
-
         add(centerPanel, BorderLayout.CENTER);
 
         // 프레임 표시
         setVisible(true);
+    }
+
+    public void addIncomeElement() {
+        // JTable에 표시할 데이터 준비
+        model.setRowCount(0);
+
+        // 테이블에 데이터 추가
+        supplyList = supplyDAO.getSuppliesWithProductAndCategory();
+        for (SupplyProductVO supply : supplyList) {
+            Vector<Object> v = new Vector<>();
+            v.add(supply.getSupplyId());
+            v.add(supply.getProductId());
+            v.add(supply.getProductName());
+            v.add(supply.getCategoryName());
+            v.add(supply.getSupplyPrice());
+            v.add(supply.getSupplyAmount());
+            v.add(supply.getTotalPrice());
+            v.add(supply.getSupplyTime());
+            model.addRow(v);
+        }
     }
 }

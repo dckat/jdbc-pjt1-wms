@@ -1,22 +1,24 @@
 package com.ssginc.wms.inoutcomeManagement;
-
-import com.ssginc.wms.inoutcomeManagement.ManagerIncomeUI;
-import com.ssginc.wms.inoutcomeManagement.OutComeProductVO;
-import com.ssginc.wms.frame.CustomerFrame;
+import com.ssginc.wms.inoutcomeManagement.SupplyDAO;
+import com.ssginc.wms.supply.SupplyProductVO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Vector;
 
-public class ManagerOutcomeUI extends JFrame {
+public class AdminOutcomeUI extends JFrame {
     private JTable table;
     private OrdDAO ordDAO;
     Color color = new Color(0x615959);
+    private DefaultTableModel model;
+    private List<OutComeProductVO> ordList;
 
-    public ManagerOutcomeUI() {
+
+    public AdminOutcomeUI() {
         ordDAO = new OrdDAO();
         setBounds(100, 100, 800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,12 +78,6 @@ public class ManagerOutcomeUI extends JFrame {
         // Center Panel (with column dropdown and filter button)
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton oneWeekButton = new JButton("최근 1주");
-        JButton oneMonthButton = new JButton("최근 1개월");
-        JButton threeMonthsButton = new JButton("최근 3개월");
-        filterPanel.add(oneWeekButton);
-        filterPanel.add(oneMonthButton);
-        filterPanel.add(threeMonthsButton);
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
@@ -91,46 +87,40 @@ public class ManagerOutcomeUI extends JFrame {
         JComboBox<String> columnDropdown = new JComboBox<>(columnNames);
         JTextField filterField = new JTextField(15);
         JButton filterButton = new JButton("검색");
+        JButton refreshButton = new JButton("새로고침");
 
         filterPanel.add(columnDropdown);
         filterPanel.add(filterField);
         filterPanel.add(filterButton);
+        filterPanel.add(refreshButton);
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
-        // JTable에 표시할 데이터 준비
-        List<OutComeProductVO> ordList = ordDAO.getCompletedOrders();
-
-        // 테이블 모델 생성
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-        // 테이블에 데이터 추가
-        for (OutComeProductVO ord : ordList) {
-            Object[] row = new Object[] {
-                    ord.getOrdId(),
-                    ord.getOrdAmount(),
-                    ord.getProductId(),
-                    ord.getOrdCompleteTime(),
-                    ord.getProductName(),
-                    ord.getOrdPrice(),
-                    ord.getCategoryName()
-            };
-            model.addRow(row);
-        }
-
-        // JTable 생성
+        model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // 하단에 출고 현황 버튼을 추가하는 부분
+        addOutcomeElement();
+
+        // JTable에 표시할 데이터 준비
+       JScrollPane scrollPane = new JScrollPane(table);
+       centerPanel.add(scrollPane, BorderLayout.CENTER);
+       add(centerPanel, BorderLayout.CENTER);
+
+        // 하단에 입고 현황 버튼과 새로고침 버튼을 추가하는 부분
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  // 버튼을 중앙에 배치
         JButton outStockButton = new JButton("입고 현황");
-        bottomPanel.add(outStockButton);  // 버튼을 bottomPanel에 추가
+        bottomPanel.add(outStockButton);  // 입고 현황 버튼 추가
+        bottomPanel.add(refreshButton);  // 새로고침 버튼 추가
         centerPanel.add(bottomPanel, BorderLayout.SOUTH);  // centerPanel의 하단에 버튼을 배치
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        refreshButton.addActionListener(e -> {
+            model.setRowCount(0);
+            addOutcomeElement();
+        });
 
         outStockButton.addActionListener(e -> {
             dispose();
-            new ManagerIncomeUI();
+            new AdminIncomeUI();
         });
 
         // Add filter functionality to the filter button
@@ -174,5 +164,24 @@ public class ManagerOutcomeUI extends JFrame {
 
         // 프레임 표시
         setVisible(true);
+    }
+
+    public void addOutcomeElement() {
+        // JTable에 표시할 데이터 준비
+        model.setRowCount(0);
+
+        // 테이블에 데이터 추가
+        ordList = ordDAO.getCompletedOrders();
+        for (OutComeProductVO ord : ordList) {
+            Vector<Object> v = new Vector<>();
+            v.add(ord.getOrdId());
+            v.add(ord.getOrdAmount());
+            v.add(ord.getProductId());
+            v.add(ord.getOrdCompleteTime());
+            v.add(ord.getProductName());
+            v.add(ord.getOrdPrice());
+            v.add(ord.getCategoryName());
+            model.addRow(v);
+        }
     }
 }
