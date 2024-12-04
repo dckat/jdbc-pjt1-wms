@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -63,10 +64,6 @@ public class AdminIncomeApplyUI extends AdminFrame {
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         categoryComboBox = new JComboBox<>(new String[]{"상품이름", "분류이름"});
         JTextField searchField = new JTextField(15);
-        JButton searchButton = new JButton("검색");
-        rightSearchPanel.add(categoryComboBox);
-        rightSearchPanel.add(searchField);
-        rightSearchPanel.add(searchButton);
 
         // 왼쪽과 오른쪽 패널을 필터 패널에 배치
         filterPanel.add(leftButtonPanel, BorderLayout.WEST);
@@ -75,7 +72,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
 
         // 테이블 설정
         tableModel = new DefaultTableModel(
-                new String[]{"신청코드", "상품코드", "분류이름", "상품이름", "신청자 ID", "신청시간", "승인상태"}, 0) {
+                new String[]{"신청코드", "상품코드", "분류이름", "상품이름", "신청자 ID", "신청일", "승인상태"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 switch (columnIndex) {
@@ -83,7 +80,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
                     case 1: // 상품 코드
                         return Integer.class;
                     case 5: // 신청 시간
-                        return LocalDateTime.class;
+                        return LocalDate.class;
                     default:
                         return String.class;
                 }
@@ -107,20 +104,6 @@ public class AdminIncomeApplyUI extends AdminFrame {
         approveApplyButton.setFont(fontC);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // 이벤트 리스너 추가
-        searchButton.addActionListener(e -> {
-            String selectedColumn = (String) categoryComboBox.getSelectedItem(); // 선택된 컬럼
-            String searchKeyword = searchField.getText().trim(); // 검색어
-
-            String columnName = switch (selectedColumn) {
-                case "상품이름" -> "p.product_name";
-                case "분류이름" -> "pc.category_name";
-                default -> null;
-            };
-
-            loadProductData(columnName, searchKeyword);
-        });
-
         allApplyButton.addActionListener(e -> {
             tableModel.setRowCount(0); // 기존 데이터 삭제
             List<ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(null, null);
@@ -131,7 +114,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
                         application.getCategoryName(),
                         application.getProductName(),
                         application.getUserId(),
-                        application.getApplyTime(),
+                        application.getApplyTime().toLocalDate(),
                         application.getApplyStatus()
                 });
             }
@@ -156,7 +139,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
                         application.getCategoryName(),
                         application.getProductName(),
                         application.getUserId(),
-                        application.getApplyTime(),
+                        application.getApplyTime().toLocalDate(),
                         application.getApplyStatus()
                 });
             }
@@ -181,7 +164,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
                     application.getCategoryName(),
                     application.getProductName(),
                     application.getUserId(),
-                    application.getApplyTime(),
+                    application.getApplyTime().toLocalDate(),
                     application.getApplyStatus()
             });
         }

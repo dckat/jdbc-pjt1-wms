@@ -20,7 +20,7 @@ public class OrdCustomerUI extends CustomerFrame {
 
         // Center Panel
         JPanel centerPanel = new JPanel(new BorderLayout());
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton oneWeekButton = new JButton("최근 1주");
         JButton oneMonthButton = new JButton("최근 1개월");
         JButton threeMonthsButton = new JButton("최근 3개월");
@@ -43,7 +43,7 @@ public class OrdCustomerUI extends CustomerFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // Bottom Panel
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel blabel = new JLabel("");
         JButton cancelButton = new JButton("주문 취소");
         bottomPanel.add(blabel);
@@ -101,7 +101,7 @@ public class OrdCustomerUI extends CustomerFrame {
             v.add(data.getOrderPrice());
             v.add(data.getOrderAmount());
             v.add(data.getTotalPrice());
-            v.add(data.getOrderTime());
+            v.add(data.getOrderTime().toLocalDate());
             v.add(data.getOrderStatus());
             tableModel.addRow(v);
         }
