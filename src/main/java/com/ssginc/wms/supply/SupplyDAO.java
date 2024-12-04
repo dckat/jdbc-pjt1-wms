@@ -21,13 +21,8 @@ public class SupplyDAO {
     public ArrayList<SupplyProductVO> listSupply(String selectedColumn, String searchKeyword) {
         // 콤보박스에서 선택한 값과 데이터베이스 컬럼명을 매핑
         String columnName = switch (selectedColumn) {
-            case "발주 ID" -> "s.supply_id";
-            case "상품 ID" -> "p.product_id";
             case "상품 이름" -> "p.product_name";
             case "카테고리" -> "pc.category_name";
-            case "공급 가격" -> "p.supply_price";
-            case "발주 수량" -> "s.supply_amount";
-            case "발주 시간" -> "s.supply_time";
             default -> null;  // "전체" 또는 비정상적인 값일 경우
         };
 
@@ -41,14 +36,14 @@ public class SupplyDAO {
                 "s.supply_time " +
                 "FROM supply s " +
                 "JOIN product p ON s.product_id = p.product_id " +
-                "JOIN product_category pc ON p.category_id = pc.category_id ";
+                "JOIN product_category pc ON p.category_id = pc.category_id WHERE ";
 
         // 검색 조건 추가
         if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += "WHERE " + columnName + " = ? ";
+            query += columnName + " = ? AND ";
         }
 
-        query += "ORDER BY s.supply_id DESC";
+        query += "product_status = 'present' ORDER BY s.supply_id DESC";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -81,7 +76,7 @@ public class SupplyDAO {
     }
 
     // 발주할 상품 데이터를 검색하는 메서드
-    public List<CategoryProductVO> listSupplies(String columnName, String searchKeyword) {
+    public List<CategoryProductVO> listSupplyByKeyword(String columnName, String searchKeyword) {
         List<CategoryProductVO> products = new ArrayList<>();
         String query = """
             SELECT 
@@ -93,12 +88,13 @@ public class SupplyDAO {
                 p.supply_price, 
                 p.ord_price 
             FROM product p
-            JOIN product_category pc ON p.category_id = pc.category_id
+            JOIN product_category pc ON p.category_id = pc.category_id WHERE 
         """;
 
         if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += " WHERE " + columnName + " = ?";
+            query += columnName + " = ? AND ";
         }
+        query += "product_status = 'present' ORDER BY s.supply_id DESC";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -127,7 +123,7 @@ public class SupplyDAO {
     }
 
     // 발주 등록 메서드
-    public void registerSupply(SupplyVO supplyVO) throws SQLException {
+    public void insertSupply(SupplyVO supplyVO) throws SQLException {
         String insertSupplySQL = "INSERT INTO Supply (supply_amount, product_id, supply_time) VALUES (?, ?, NOW())";
         String updateProductSQL = "UPDATE PRODUCT SET product_amount = product_amount + ? WHERE product_id = ?";
 
