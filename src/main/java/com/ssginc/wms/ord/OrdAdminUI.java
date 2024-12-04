@@ -15,8 +15,8 @@ public class OrdAdminUI extends JFrame {
     private JTable productTable;
     private DefaultTableModel tableModel;
     Color color = new Color(0x615959);
-    OrdDAO orderDAO = new OrdDAO();
-    ProductDAO productDAO = new ProductDAO();
+    OrdDAO ordDao = new OrdDAO();
+    ProductDAO productDao = new ProductDAO();
 
     public OrdAdminUI() {
         // JFrame 설정
@@ -89,8 +89,8 @@ public class OrdAdminUI extends JFrame {
         productTable = new JTable(tableModel);
         productTable.setFont(fontT);
 
-        ArrayList<OrdProductVO> ordList = orderDAO.listOrder();
-        addOrderElement(ordList);
+        ArrayList<OrdProductVO> ordList = ordDao.listOrder();
+        addOrdElement(ordList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
         centerPanel.add(tableScrollPane, BorderLayout.CENTER);
@@ -103,6 +103,24 @@ public class OrdAdminUI extends JFrame {
         bottomPanel.add(blabel);
         bottomPanel.add(approveButton);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        oneWeekButton.addActionListener(e -> {
+            tableModel.setRowCount(0);
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("1week");
+            addOrdElement(filteredList);
+        });
+
+        oneMonthButton.addActionListener(e -> {
+            tableModel.setRowCount(0);
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("1month");
+            addOrdElement(filteredList);
+        });
+
+        threeMonthsButton.addActionListener(e -> {
+            tableModel.setRowCount(0);
+            ArrayList<OrdProductVO> filteredList = ordDao.getAdminListByPeriod("3months");;
+            addOrdElement(filteredList);
+        });
 
         approveButton.addActionListener(e -> {
             int[] rows = productTable.getSelectedRows();
@@ -119,13 +137,13 @@ public class OrdAdminUI extends JFrame {
             int[] productIds = ProductService.getProductIds(rows, data);
 
             Map<Integer, Integer> ordMap = OrdService.getOrderInfo(productIds, ordAmounts);
-            Map<Integer, Integer> proMap = productDAO.getAmountById();
+            Map<Integer, Integer> proMap = productDao.getAmountById();
 
             if (!checkApprove(productIds, ordMap, proMap)) {
                 JOptionPane.showMessageDialog(this, "재고량이 부족하여 승인할 수 없습니다.");
                 return;
             }
-            orderDAO.updateOrderStatus(ordIds, ordAmounts);
+            ordDao.updateOrderStatus(ordIds, ordAmounts);
 
             this.dispose();
             new OrdAdminUI();
@@ -134,7 +152,7 @@ public class OrdAdminUI extends JFrame {
         setVisible(true);
     }
 
-    public void addOrderElement(ArrayList<OrdProductVO> list) {
+    public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
             v.add(data.getOrderId());
