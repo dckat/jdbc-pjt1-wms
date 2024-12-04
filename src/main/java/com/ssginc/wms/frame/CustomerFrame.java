@@ -69,7 +69,6 @@ public class CustomerFrame extends JFrame {
         topPanel.add(welcomeLabel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        JLabel welcomeLabel = new JLabel("< " + "user1" + " > 님 환영합니다.     ", SwingConstants.RIGHT);
         topPanel.add(welcomeLabel, BorderLayout.CENTER);
         topPanel.setBackground(Color.GRAY);
         topPanel.add(dropdownButton, BorderLayout.EAST);
