@@ -72,7 +72,7 @@ public class OrdCustomerUI extends CustomerFrame {
             int[] rows = productTable.getSelectedRows();
             TableModel data = productTable.getModel();
 
-            if (!OrdService.checkStatus(rows, data)) {
+            if (!OrdService.checkOrdStatus(rows, data)) {
                 JOptionPane.showMessageDialog(this, "승인된 주문내역은 취소가 불가능합니다.");
                 return;
             }
