@@ -3,7 +3,7 @@ package com.ssginc.wms.frame;
 import com.ssginc.wms.incomeApply.CustomerIncomeApplyUI;
 import com.ssginc.wms.ord.OrdCustomerUI;
 import com.ssginc.wms.product.ProductDAO;
-import com.ssginc.wms.product.UserProductUI;
+import com.ssginc.wms.product.CustomerProductUI;
 import com.ssginc.wms.user.LoginFrameUI;
 import com.ssginc.wms.user.UserDAO;
 import com.ssginc.wms.user.UserVO;
@@ -93,7 +93,7 @@ public class CustomerFrame extends JFrame {
 
         invenUIButton.addActionListener(e -> {
             this.dispose();
-            new UserProductUI(loggedInUserId);
+            new CustomerProductUI(loggedInUserId);
         });
         ordHistoryButton.addActionListener(e -> {
             this.dispose();

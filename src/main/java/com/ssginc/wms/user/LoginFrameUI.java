@@ -1,9 +1,7 @@
 package com.ssginc.wms.user;
 
 import com.ssginc.wms.product.AdminProductUI;
-import com.ssginc.wms.product.UserProductUI;
-import com.ssginc.wms.user.UserVO;
-import com.ssginc.wms.user.UserDAO;
+import com.ssginc.wms.product.CustomerProductUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +68,7 @@ public class LoginFrameUI {
                 if ("admin".equals(grade)) {
                     new AdminProductUI(user.getUserId());
                 } else if ("customer".equals(grade)) {
-                    new UserProductUI(user.getUserId());
+                    new CustomerProductUI(user.getUserId());
                 } else {
                     JOptionPane.showMessageDialog(frame, "알 수 없는 사용자 등급입니다.");
                 }

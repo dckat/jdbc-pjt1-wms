@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class UserProductUI extends CustomerFrame {
+public class CustomerProductUI extends CustomerFrame {
     private JTable productTable;
     private JComboBox<String> categoryComboBox;
     private DefaultTableModel tableModel;
 
-    public UserProductUI(String userId) {
+    public CustomerProductUI(String userId) {
         super(userId);
         ProductDAO dao = new ProductDAO();
         // JFrame 설정
@@ -39,7 +39,7 @@ public class UserProductUI extends CustomerFrame {
         tableModel = new DefaultTableModel(new String[]{"상품코드", "상품이름", "분류코드", "분류이름", "상품단가", "재고수량"}, 0);
         productTable = new JTable(tableModel);
 
-        ArrayList<UserProductVO> proList = dao.listUserProduct();
+        ArrayList<CustomerProductVO> proList = dao.listUserProduct();
         addElement(proList);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
@@ -65,7 +65,7 @@ public class UserProductUI extends CustomerFrame {
                 default -> null;
             };
 
-            ArrayList<UserProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
+            ArrayList<CustomerProductVO> filteredList = dao.searchProductByKeyword(keyword, searchColumn);
             addElement(filteredList);
         });
 
@@ -135,8 +135,8 @@ public class UserProductUI extends CustomerFrame {
         setVisible(true);
     }
 
-    public void addElement(ArrayList<UserProductVO> list) {
-        for (UserProductVO data: list) {
+    public void addElement(ArrayList<CustomerProductVO> list) {
+        for (CustomerProductVO data: list) {
             Vector<Object> v = new Vector<>();
             v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
