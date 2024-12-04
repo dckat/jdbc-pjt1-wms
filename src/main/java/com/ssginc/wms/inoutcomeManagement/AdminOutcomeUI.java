@@ -1,5 +1,6 @@
 package com.ssginc.wms.inoutcomeManagement;
 import com.ssginc.wms.inoutcomeManagement.SupplyDAO;
+import com.ssginc.wms.product.ProductService;
 import com.ssginc.wms.supply.SupplyProductVO;
 
 import javax.swing.*;
@@ -174,9 +175,9 @@ public class AdminOutcomeUI extends JFrame {
         ordList = ordDAO.getCompletedOrders();
         for (OutComeProductVO ord : ordList) {
             Vector<Object> v = new Vector<>();
-            v.add(ord.getOrdId());
+            v.add(InoutcomeManagementService.encodeOutcomeId(ord.getOrdId()));
             v.add(ord.getOrdAmount());
-            v.add(ord.getProductId());
+            v.add(ProductService.encodeProductId(ord.getProductId()));
             v.add(ord.getOrdCompleteTime());
             v.add(ord.getProductName());
             v.add(ord.getOrdPrice());

@@ -1,6 +1,7 @@
 package com.ssginc.wms.ord;
 
 import com.ssginc.wms.frame.CustomerFrame;
+import com.ssginc.wms.product.ProductService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -93,9 +94,8 @@ public class OrdCustomerUI extends CustomerFrame {
     public void addOrdElement(ArrayList<OrdProductVO> list) {
         for (OrdProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            String ordId = OrdService.encodeOrderId(data.getOrderId());
-            v.add(ordId);
-            v.add(data.getProductId());
+            v.add(OrdService.encodeOrderId(data.getOrderId()));
+            v.add(ProductService.encodeProductId(data.getProductId()));
             v.add(data.getProductName());
             v.add(data.getOrderPrice());
             v.add(data.getOrderAmount());

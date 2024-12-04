@@ -1,6 +1,8 @@
 package com.ssginc.wms.supply;
 
 
+import com.ssginc.wms.product.ProductService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -192,9 +194,9 @@ public class SupplyUI extends JFrame {
 
         for (CategoryProductVO product : products) {
             tableModel.addRow(new Object[]{
-                    product.getCategoryId(),
+                    ProductService.encodeCategoryId(product.getCategoryId()),
                     product.getCategoryName(),
-                    product.getProductId(),
+                    ProductService.encodeProductId(product.getProductId()),
                     product.getProductName(),
                     product.getProductAmount(),
                     product.getSupplyPrice(),

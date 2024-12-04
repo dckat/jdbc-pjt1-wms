@@ -1,6 +1,7 @@
 package com.ssginc.wms.incomeApply;
 
 import com.ssginc.wms.frame.CustomerFrame;
+import com.ssginc.wms.product.ProductService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -136,8 +137,8 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
         for (ProductIncomeApplyVO apply : incomeApplies) {
             Object[] rowData = new Object[7];
             rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = apply.getApplyId();
-            rowData[2] = apply.getProductId();
+            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[2] = ProductService.encodeProductId(apply.getProductId());
             rowData[3] = apply.getProductName();
             rowData[4] = apply.getCategoryName();
             rowData[5] = apply.getApplyTime();
@@ -156,8 +157,8 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
         for (com.ssginc.wms.incomeApply.ProductIncomeApplyVO apply : filteredData) {
             Object[] rowData = new Object[7];
             rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = apply.getApplyId();
-            rowData[2] = apply.getProductId();
+            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[2] = ProductService.encodeProductId(apply.getProductId());
             rowData[3] = apply.getProductName();
             rowData[4] = apply.getCategoryName();
             rowData[5] = apply.getApplyTime();
@@ -175,8 +176,8 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
         for (ProductIncomeApplyVO apply : incomeApplies) {
             Object[] rowData = new Object[7];
             rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = apply.getApplyId();
-            rowData[2] = apply.getProductId();
+            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[2] = ProductService.encodeProductId(apply.getProductId());
             rowData[3] = apply.getProductName();
             rowData[4] = apply.getCategoryName();
             rowData[5] = apply.getApplyTime();

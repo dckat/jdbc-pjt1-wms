@@ -1,6 +1,8 @@
 package com.ssginc.wms.inoutcomeManagement;
 import com.ssginc.wms.inoutcomeManagement.SupplyDAO;
+import com.ssginc.wms.product.ProductService;
 import com.ssginc.wms.supply.SupplyProductVO;
+import com.ssginc.wms.supply.SupplyService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -175,8 +177,8 @@ public class AdminIncomeUI extends JFrame {
         supplyList = supplyDAO.getSuppliesWithProductAndCategory();
         for (SupplyProductVO supply : supplyList) {
             Vector<Object> v = new Vector<>();
-            v.add(supply.getSupplyId());
-            v.add(supply.getProductId());
+            v.add(InoutcomeManagementService.encodeIncomeId(supply.getSupplyId()));
+            v.add(ProductService.encodeProductId(supply.getProductId()));
             v.add(supply.getProductName());
             v.add(supply.getCategoryName());
             v.add(supply.getSupplyPrice());

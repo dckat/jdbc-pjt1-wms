@@ -212,12 +212,12 @@ public class AdminProductUI extends JFrame {
         List<ProductVO> products = productDAO.getProducts(columnName, searchKeyword);
         for (ProductVO product : products) {
             tableModel.addRow(new Object[]{
-                    product.getProductId(),
+                    ProductService.encodeProductId(product.getProductId()),
                     product.getProductName(),
                     product.getOrderPrice(),
                     product.getSupplyPrice(),
                     product.getProductAmount(),
-                    product.getCategoryId()
+                    ProductService.encodeCategoryId(product.getCategoryId())
             });
         }
     }
