@@ -131,6 +131,7 @@ public class UserProductUI extends CustomerFrame {
         });
 
         // JFrame 표시
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

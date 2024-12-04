@@ -113,6 +113,7 @@ public class AdminIncomeUI extends AdminFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // 프레임 표시
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

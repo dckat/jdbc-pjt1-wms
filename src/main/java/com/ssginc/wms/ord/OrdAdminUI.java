@@ -102,6 +102,7 @@ public class OrdAdminUI extends AdminFrame {
             new OrdAdminUI(id);
         });
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

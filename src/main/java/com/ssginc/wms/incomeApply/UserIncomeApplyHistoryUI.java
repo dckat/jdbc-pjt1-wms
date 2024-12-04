@@ -123,6 +123,7 @@ public class UserIncomeApplyHistoryUI extends CustomerFrame {
         // 초기 데이터 로드
         loadIncomeApplyData();
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

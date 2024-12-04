@@ -88,6 +88,7 @@ public class OrdCustomerUI extends CustomerFrame {
             new OrdCustomerUI(userId);
         });
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
