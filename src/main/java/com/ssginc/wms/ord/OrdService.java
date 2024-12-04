@@ -17,15 +17,6 @@ public class OrdService {
         return result;
     }
 
-    public static boolean checkStatus(int[] rows, TableModel data) {
-        for (int i = 0; i < rows.length; i++) {
-            if (data.getValueAt(rows[i], 9).toString().equals("completed")) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static String encodeOrderId(int ordId) {
         StringBuilder sTemp = new StringBuilder();
         sTemp.append("O");      // 주문코드는 알파벳 O로 시작
