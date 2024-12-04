@@ -16,9 +16,11 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
     private final ProductIncomeService productIncomeService;
     private IncomeApplyDAO dao;
     private JButton yearButton, monthButton, weekButton;
+    private String loggedId;
 
-    public CustomerIncomeApplyUI(String userId) {
-        super(userId);
+    public CustomerIncomeApplyUI(String id) {
+        super(id);
+        loggedId = id;
         this.productIncomeService = new ProductIncomeService();
         this.dao = new IncomeApplyDAO();
 
@@ -127,7 +129,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
     // 검색된 데이터 로드
     private void loadIncomeApplyDataWithSearch(String column, String searchText) {
-        List<ProductIncomeApplyVO> incomeApplies = dao.searchIncomeApplies(column, searchText);
+        List<ProductIncomeApplyVO> incomeApplies = dao.searchIncomeApplies(loggedId, column, searchText);
 
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기
@@ -146,7 +148,8 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
     private void filterByDate(int days) {
         IncomeApplyDAO dao = new IncomeApplyDAO();
-        List<com.ssginc.wms.incomeApply.ProductIncomeApplyVO> filteredData = dao.getIncomeApplyWithinPeriod(days);
+        List<com.ssginc.wms.incomeApply.ProductIncomeApplyVO> filteredData =
+                dao.getIncomeApplyWithinPeriod(loggedId, days);
 
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기
@@ -164,7 +167,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
     }
 
     private void loadIncomeApplyData() {
-        List<ProductIncomeApplyVO> incomeApplies = dao.getAllIncomeApply();
+        List<ProductIncomeApplyVO> incomeApplies = dao.getAllIncomeApplyById(loggedId);
 
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기

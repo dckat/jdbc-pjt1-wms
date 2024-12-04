@@ -2,9 +2,9 @@ package com.ssginc.wms.incomeApply;
 
 import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.product.ProductService;
-import com.ssginc.wms.supply.ProductIncomeApplyVO;
 import com.ssginc.wms.supply.SupplyVO;
 import com.ssginc.wms.util.DecodeId;
+import com.ssginc.wms.incomeApply.ProductIncomeApplyVO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -116,8 +116,8 @@ public class AdminIncomeApplyUI extends AdminFrame {
 
         allApplyButton.addActionListener(e -> {
             tableModel.setRowCount(0); // 기존 데이터 삭제
-            List<com.ssginc.wms.supply.ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(null, null);
-            for (com.ssginc.wms.supply.ProductIncomeApplyVO application : applications) {
+            List<ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(null, null);
+            for (ProductIncomeApplyVO application : applications) {
                 tableModel.addRow(new Object[]{
                         IncomeApplyService.encodeApplyId(application.getApplyId()),
                         ProductService.encodeProductId(application.getProductId()),
@@ -131,8 +131,8 @@ public class AdminIncomeApplyUI extends AdminFrame {
         });
         yetApplyButton.addActionListener(e -> {
             tableModel.setRowCount(0); // 기존 데이터 삭제
-            List<com.ssginc.wms.supply.ProductIncomeApplyVO> applications = incomeApplyDAO.listPendingIncomeApplies();
-            for (com.ssginc.wms.supply.ProductIncomeApplyVO application : applications) {
+            List<ProductIncomeApplyVO> applications = incomeApplyDAO.listPendingIncomeApplies();
+            for (ProductIncomeApplyVO application : applications) {
                 tableModel.addRow(new Object[]{
                         IncomeApplyService.encodeApplyId(application.getApplyId()),
                         ProductService.encodeProductId(application.getProductId()),
@@ -156,7 +156,7 @@ public class AdminIncomeApplyUI extends AdminFrame {
     public void loadProductData(String selectedColumn, String searchKeyword) {
         tableModel.setRowCount(0); // 기존 데이터 삭제
 
-        List<com.ssginc.wms.supply.ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(selectedColumn, searchKeyword);
+        List<ProductIncomeApplyVO> applications = incomeApplyDAO.listIncomeApply(selectedColumn, searchKeyword);
 
         for (ProductIncomeApplyVO application : applications) {
             tableModel.addRow(new Object[]{
