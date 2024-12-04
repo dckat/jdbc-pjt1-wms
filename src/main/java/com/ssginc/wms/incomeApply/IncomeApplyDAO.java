@@ -4,6 +4,7 @@ import com.ssginc.wms.hikari.HikariCPDataSource;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,5 +150,25 @@ public class IncomeApplyDAO {
             System.err.println("DB 오류: " + e.getMessage());
         }
         return incomeApplies;
+    }
+
+    // 입고 신청 데이터 삽입 메서드
+    public void insertIncomeApply(IncomeApplyVO incomeApplyVO) {
+        String sql = "INSERT INTO income_apply (product_id, user_id, apply_time) " +
+                "VALUES (?, ?, ?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, incomeApplyVO.getProductId());
+            pstmt.setString(2, incomeApplyVO.getUserId());
+            pstmt.setTimestamp(3, Timestamp.valueOf(incomeApplyVO.getApplyTime()));
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("입고 신청 데이터가 성공적으로 삽입되었습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.ssginc.wms.product;
 
 import com.ssginc.wms.frame.CustomerFrame;
+import com.ssginc.wms.incomeApply.IncomeApplyDAO;
+import com.ssginc.wms.incomeApply.IncomeApplyVO;
 import com.ssginc.wms.ord.OrdDAO;
 import com.ssginc.wms.ord.OrdVO;
 
@@ -102,6 +104,18 @@ public class UserProductUI extends CustomerFrame {
                                 else {
                                     JOptionPane.showMessageDialog(this, "재고량이 부족하여 입고신청을 진행합니다.");
                                     // 입고 신청 내역 insert 작성 필요
+                                    IncomeApplyDAO incomeApplyDAO = new IncomeApplyDAO();
+                                    IncomeApplyVO incomeApplyVO = new IncomeApplyVO();
+
+                                    incomeApplyVO.setProductId(productId); // 선택된 상품 ID
+                                    incomeApplyVO.setUserId("user1");
+                                    incomeApplyVO.setApplyTime(LocalDateTime.now()); // 현재 시간
+
+                                    // 입고 신청 데이터를 삽입
+                                    incomeApplyDAO.insertIncomeApply(incomeApplyVO);
+
+                                    JOptionPane.showMessageDialog(this, "입고 신청이 완료되었습니다.");
+                                    break;
                                 }
                                 break;
                             }
