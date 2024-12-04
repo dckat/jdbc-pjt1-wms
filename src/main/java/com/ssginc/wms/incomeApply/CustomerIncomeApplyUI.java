@@ -2,6 +2,7 @@ package com.ssginc.wms.incomeApply;
 
 import com.ssginc.wms.frame.CustomerFrame;
 import com.ssginc.wms.product.ProductService;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -58,13 +59,10 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
         // 테이블 초기화 (체크박스를 추가)
         tableModel = new DefaultTableModel(new String[]{
-                "선택", "신청 ID", "상품 ID", "상품 이름", "카테고리", "신청 시간", "상태"
+                "신청 ID", "상품 ID", "상품 이름", "카테고리", "신청 시간", "상태"
         }, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0) {
-                    return Boolean.class;
-                }
                 return super.getColumnClass(columnIndex);
             }
         };
@@ -134,14 +132,13 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기
         for (ProductIncomeApplyVO apply : incomeApplies) {
-            Object[] rowData = new Object[7];
-            rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
-            rowData[2] = ProductService.encodeProductId(apply.getProductId());
-            rowData[3] = apply.getProductName();
-            rowData[4] = apply.getCategoryName();
-            rowData[5] = apply.getApplyTime();
-            rowData[6] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
+            Object[] rowData = new Object[6];
+            rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[1] = ProductService.encodeProductId(apply.getProductId());
+            rowData[2] = apply.getProductName();
+            rowData[3] = apply.getCategoryName();
+            rowData[4] = apply.getApplyTime();
+            rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 
             tableModel.addRow(rowData);
         }
@@ -154,14 +151,13 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기
         for (com.ssginc.wms.incomeApply.ProductIncomeApplyVO apply : filteredData) {
-            Object[] rowData = new Object[7];
-            rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
-            rowData[2] = ProductService.encodeProductId(apply.getProductId());
-            rowData[3] = apply.getProductName();
-            rowData[4] = apply.getCategoryName();
-            rowData[5] = apply.getApplyTime();
-            rowData[6] = productIncomeService.getApplyStatusAsString(apply);  // Process -> String 변환
+            Object[] rowData = new Object[6];
+            rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[1] = ProductService.encodeProductId(apply.getProductId());
+            rowData[2] = apply.getProductName();
+            rowData[3] = apply.getCategoryName();
+            rowData[4] = apply.getApplyTime();
+            rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Process -> String 변환
 
             tableModel.addRow(rowData);
         }
@@ -173,14 +169,13 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         // 테이블 데이터 모델 업데이트
         tableModel.setRowCount(0);  // 기존 데이터 지우기
         for (ProductIncomeApplyVO apply : incomeApplies) {
-            Object[] rowData = new Object[7];
-            rowData[0] = false;  // 체크박스 초기값
-            rowData[1] = IncomeApplyService.encodeApplyId(apply.getApplyId());
-            rowData[2] = ProductService.encodeProductId(apply.getProductId());
-            rowData[3] = apply.getProductName();
-            rowData[4] = apply.getCategoryName();
-            rowData[5] = apply.getApplyTime();
-            rowData[6] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
+            Object[] rowData = new Object[6];
+            rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
+            rowData[1] = ProductService.encodeProductId(apply.getProductId());
+            rowData[2] = apply.getProductName();
+            rowData[3] = apply.getCategoryName();
+            rowData[4] = apply.getApplyTime();
+            rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 
             tableModel.addRow(rowData);
         }
@@ -195,19 +190,16 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
         List<Integer> applyIdsToDelete = new ArrayList<>();
         for (int row : selectedRows) {
-            boolean isSelected = (boolean) tableModel.getValueAt(row, 0); // 체크박스 값 확인
-            if (isSelected) {
-                int applyId = (int) tableModel.getValueAt(row, 1); // 신청 ID 가져오기
-                String status = (String) tableModel.getValueAt(row, 6); // 상태 가져오기
+            int applyId = DecodeId.decodeId(tableModel.getValueAt(row, 0).toString()); // 신청 ID 가져오기
+            String status = (String) tableModel.getValueAt(row, 6);  // 상태 가져오기
 
-                if ("completed".equals(status)) {
-                    // "completed" 상태인 경우 삭제 불가 메시지 표시
-                    JOptionPane.showMessageDialog(this, "이미 입고가 완료되었습니다. 취소할 수 없습니다.");
-                    return;
-                }
-
-                applyIdsToDelete.add(applyId);
+            if ("completed".equals(status)) {
+                // "completed" 상태인 경우 삭제 불가 메시지 표시
+                JOptionPane.showMessageDialog(this, "이미 입고가 완료되었습니다. 취소할 수 없습니다.");
+                return;
             }
+
+            applyIdsToDelete.add(applyId);
         }
 
         if (applyIdsToDelete.isEmpty()) {
