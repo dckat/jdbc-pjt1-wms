@@ -54,16 +54,16 @@ public class ProductDAO {
                      "FROM product p\n" +
                      "INNER JOIN product_category c\n" +
                      "ON p.category_id = c.category_id\n" +
-                     "WHERE " + selected + " like ? AND product_status = 'present'")) {
-            ps.setString(1, "%" + keyword + "%");
+                     "WHERE " + keyword + " like ? AND product_status = 'present'")) {
+            ps.setString(1, "%" + selected + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 ArrayList<CustomerProductVO> list = new ArrayList<>();
                 while (rs.next()) {
                     CustomerProductVO vo = new CustomerProductVO();
-                    vo.setProductId(rs.getInt("product_id"));
-                    vo.setProductName(rs.getString("product_name"));
                     vo.setCategoryId(rs.getInt("category_id"));
                     vo.setCategoryName(rs.getString("category_name"));
+                    vo.setProductId(rs.getInt("product_id"));
+                    vo.setProductName(rs.getString("product_name"));
                     vo.setOrderPrice(rs.getInt("ord_price"));
                     vo.setProductAmount(rs.getInt("product_amount"));
                     list.add(vo);
@@ -79,10 +79,43 @@ public class ProductDAO {
     // 상품 목록 조회
     public List<ProductVO> getProducts(String columnName, String searchKeyword) {
         List<ProductVO> productList = new ArrayList<>();
+        String query = "SELECT * FROM product WHERE product_status = 'present'";
+
+        if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
+            query += " AND LOWER(" + columnName + ") LIKE LOWER(?)";
+        }
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
+                stmt.setString(1, "%" + searchKeyword + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ProductVO product = new ProductVO();
+                product.setCategoryId(rs.getInt("category_id"));
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setOrderPrice(rs.getInt("ord_price"));
+                product.setSupplyPrice(rs.getInt("supply_price"));
+                product.setProductAmount(rs.getInt("product_amount"));
+                productList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productList;
+    }
+    public List<ProductVO> getProducts1(String columnName, String searchKeyword) {
+        List<ProductVO> productList = new ArrayList<>();
         String query = "SELECT * FROM product where ";
 
         if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += " WHERE " + columnName + " = ? and ";
+            //query += " WHERE " + columnName + " = ? and ";
+            query += columnName + " = ? and ";
         }
         query += "product_status = 'present'";
 
@@ -96,12 +129,12 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 ProductVO product = new ProductVO();
+                product.setCategoryId(rs.getInt("category_id"));
                 product.setProductId(rs.getInt("product_id"));
                 product.setProductName(rs.getString("product_name"));
                 product.setOrderPrice(rs.getInt("ord_price"));
                 product.setSupplyPrice(rs.getInt("supply_price"));
                 product.setProductAmount(rs.getInt("product_amount"));
-                product.setCategoryId(rs.getInt("category_id"));
                 productList.add(product);
             }
         } catch (SQLException e) {

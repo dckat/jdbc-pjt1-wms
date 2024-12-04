@@ -57,7 +57,7 @@ public class ListSupplyUI extends AdminFrame {
 
         // 오른쪽에 위치할 검색 패널
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 이름", "카테고리"});
+        categoryComboBox = new JComboBox<>(new String[]{"상품이름", "분류이름"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         rightSearchPanel.add(categoryComboBox);
@@ -70,7 +70,7 @@ public class ListSupplyUI extends AdminFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"발주 코드", "상품 코드", "상품 이름", "카테고리", "발주 단가", "발주 수량", "발주일"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"발주코드", "상품코드", "상품이름", "분류이름", "발주 단가", "발주 수량", "발주일"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0 || columnIndex == 1 || columnIndex == 4 || columnIndex == 5) {
@@ -100,9 +100,11 @@ public class ListSupplyUI extends AdminFrame {
         // 이벤트 리스너 추가
         searchButton.addActionListener(e -> {
             String selectedColumn = (String) categoryComboBox.getSelectedItem(); // 선택된 컬럼
-            String searchKeyword = searchField.getText(); // 검색어
+            String searchKeyword = searchField.getText().trim(); // 검색어
+
             loadProductData(selectedColumn, searchKeyword);
         });
+
 
         orderListButton.addActionListener(e -> {
             new ListSupplyUI(id);  // 발주 내역 화면 열기
@@ -115,11 +117,31 @@ public class ListSupplyUI extends AdminFrame {
     }
 
     public void loadProductData(String selectedColumn, String searchKeyword) {
-        SupplyDAO dao = new SupplyDAO();
         tableModel.setRowCount(0); // 기존 데이터 삭제
+
+        SupplyDAO dao = new SupplyDAO();
         ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
-        addElement(list);
+
+        if (list != null) {
+            for (SupplyProductVO productVO : list) {
+                Vector<Object> v = new Vector<>();
+                v.add(SupplyService.encodeSupplyId(productVO.getSupplyId()));
+                v.add(ProductService.encodeProductId(productVO.getProductId()));
+                v.add(productVO.getProductName());
+                v.add(productVO.getCategoryName());
+                v.add(productVO.getSupplyPrice());
+                v.add(productVO.getSupplyAmount());
+                v.add(productVO.getSupplyTime());
+                tableModel.addRow(v);
+            }
+        }
     }
+//    public void loadProductData(String selectedColumn, String searchKeyword) {
+//        SupplyDAO dao = new SupplyDAO();
+//        tableModel.setRowCount(0); // 기존 데이터 삭제
+//        ArrayList<SupplyProductVO> list = dao.listSupply(selectedColumn, searchKeyword);
+//        addElement(list);
+//    }
 
     public void addElement(ArrayList<SupplyProductVO> list) {
         for (SupplyProductVO productVO : list) {
