@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class SupplyUI extends AdminFrame {
     private JTable productTable;
@@ -59,7 +61,7 @@ public class SupplyUI extends AdminFrame {
 
         // 오른쪽에 위치할 검색 패널
         JPanel rightSearchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        categoryComboBox = new JComboBox<>(new String[]{"전체", "상품 코드", "상품 이름", "주문 단가", "발주 단가", "재고 수량", "카테고리 코드", "카테고리"});
+        categoryComboBox = new JComboBox<>(new String[]{"상품이름", "분류이름"});
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("검색");
         rightSearchPanel.add(categoryComboBox);
@@ -73,7 +75,7 @@ public class SupplyUI extends AdminFrame {
 
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"카테고리 코드", "카테고리", "상품 코드", "상품 이름", "재고 수량", "발주 단가", "주문 단가"}, 0) {
+        tableModel = new DefaultTableModel(new String[]{"분류코드", "분류이름", "상품코드", "상품이름", "재고수량", "발주단가", "주문단가"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 5 || columnIndex == 6) {
@@ -104,7 +106,8 @@ public class SupplyUI extends AdminFrame {
         // 이벤트 리스너 추가
         searchButton.addActionListener(e -> {
             String selectedColumn = (String) categoryComboBox.getSelectedItem(); // 선택된 컬럼
-            String searchKeyword = searchField.getText(); // 검색어
+            String searchKeyword = searchField.getText().trim(); // 검색어
+
             loadProductData(selectedColumn, searchKeyword);
         });
 
@@ -125,11 +128,17 @@ public class SupplyUI extends AdminFrame {
         });
     }
 
+
     public void loadProductData(String selectedColumn, String searchKeyword) {
         tableModel.setRowCount(0); // 기존 데이터 삭제
 
-        List<CategoryProductVO> products = supplyDAO.listSupplyByKeyword(selectedColumn, searchKeyword);
+        String columnName = switch (selectedColumn) {
+            case "상품이름" -> "p.product_name";
+            case "분류이름" -> "pc.category_name";
+            default -> null;
+        };
 
+        List<CategoryProductVO> products = supplyDAO.listSupplyByKeyword(columnName, searchKeyword);
         for (CategoryProductVO product : products) {
             tableModel.addRow(new Object[]{
                     ProductService.encodeCategoryId(product.getCategoryId()),
@@ -142,6 +151,7 @@ public class SupplyUI extends AdminFrame {
             });
         }
     }
+
 
     private void supplySelectedRows() {
         int selectedRow = productTable.getSelectedRow();

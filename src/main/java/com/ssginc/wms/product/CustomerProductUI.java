@@ -37,7 +37,7 @@ public class CustomerProductUI extends CustomerFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"상품코드", "상품이름", "분류코드", "분류이름", "상품단가", "재고수량"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"분류코드", "분류이름", "상품코드", "상품이름", "상품단가", "재고수량"}, 0);
         productTable = new JTable(tableModel);
 
         ArrayList<CustomerProductVO> proList = dao.listUserProduct();
@@ -139,10 +139,10 @@ public class CustomerProductUI extends CustomerFrame {
     public void addElement(ArrayList<CustomerProductVO> list) {
         for (CustomerProductVO data: list) {
             Vector<Object> v = new Vector<>();
-            v.add(ProductService.encodeProductId(data.getProductId()));
-            v.add(data.getProductName());
             v.add(ProductService.encodeCategoryId(data.getCategoryId()));
             v.add(data.getCategoryName());
+            v.add(ProductService.encodeProductId(data.getProductId()));
+            v.add(data.getProductName());
             v.add(data.getOrderPrice());
             v.add(data.getProductAmount());
             tableModel.addRow(v);

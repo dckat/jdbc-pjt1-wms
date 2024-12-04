@@ -30,8 +30,8 @@ public class OrdCustomerUI extends CustomerFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         // 테이블 설정
-        tableModel = new DefaultTableModel(new String[]{"주문 코드", "상품 코드", "상품 이름",
-                "주문 단가", "주문 수량", "총 가격", "주문일", "주문 상태"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"주문코드", "상품코드", "상품이름",
+                "주문단가", "주문수량", "총 가격", "주문일", "주문상태"}, 0);
         productTable = new JTable(tableModel);
 
         OrdDAO dao = new OrdDAO();

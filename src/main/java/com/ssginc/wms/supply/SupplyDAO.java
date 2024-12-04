@@ -19,38 +19,37 @@ public class SupplyDAO {
 
     // 발주 내역 메서드
     public ArrayList<SupplyProductVO> listSupply(String selectedColumn, String searchKeyword) {
-        // 콤보박스에서 선택한 값과 데이터베이스 컬럼명을 매핑
         String columnName = switch (selectedColumn) {
-            case "상품 이름" -> "p.product_name";
-            case "카테고리" -> "pc.category_name";
-            default -> null;  // "전체" 또는 비정상적인 값일 경우
+            case "상품이름" -> "p.product_name";
+            case "분류이름" -> "pc.category_name";
+            default -> null; // "전체" 또는 비정상적인 값일 경우
         };
 
-        String query = "SELECT " +
-                "s.supply_id, " +
-                "p.product_id, " +
-                "p.product_name, " +
-                "pc.category_name, " +
-                "p.supply_price, " +
-                "s.supply_amount, " +
-                "s.supply_time " +
-                "FROM supply s " +
-                "JOIN product p ON s.product_id = p.product_id " +
-                "JOIN product_category pc ON p.category_id = pc.category_id WHERE ";
+        String query = """
+        SELECT
+            s.supply_id,
+            p.product_id,
+            p.product_name,
+            pc.category_name,
+            p.supply_price,
+            s.supply_amount,
+            s.supply_time
+        FROM supply s
+        JOIN product p ON s.product_id = p.product_id
+        JOIN product_category pc ON p.category_id = pc.category_id
+        WHERE product_status = 'present'
+    """;
 
-        // 검색 조건 추가
         if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += columnName + " = ? AND ";
+            query += " AND LOWER(" + columnName + ") LIKE LOWER(?)";
         }
-
-        query += "product_status = 'present' ORDER BY s.supply_id DESC";
+        query += " ORDER BY s.supply_id DESC";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            // 검색 조건이 있는 경우 파라미터 설정
             if (columnName != null && searchKeyword != null && !searchKeyword.isEmpty()) {
-                stmt.setString(1, searchKeyword);
+                stmt.setString(1, "%" + searchKeyword + "%");
             }
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -68,39 +67,40 @@ public class SupplyDAO {
                 }
                 return list;
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return null;
         }
-        return null;
     }
+
 
     // 발주할 상품 데이터를 검색하는 메서드
     public List<CategoryProductVO> listSupplyByKeyword(String columnName, String searchKeyword) {
         List<CategoryProductVO> products = new ArrayList<>();
         String query = """
-            SELECT 
-                p.category_id, 
-                pc.category_name, 
-                p.product_id, 
-                p.product_name, 
-                p.product_amount, 
-                p.supply_price, 
-                p.ord_price 
-            FROM product p
-            JOIN product_category pc ON p.category_id = pc.category_id WHERE 
-        """;
+        SELECT
+            p.category_id,
+            pc.category_name,
+            p.product_id,
+            p.product_name,
+            p.product_amount,
+            p.supply_price,
+            p.ord_price
+        FROM product p
+        JOIN product_category pc ON p.category_id = pc.category_id
+        WHERE product_status = 'present'
+    """;
 
         if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
-            query += columnName + " = ? AND ";
+            query += " AND LOWER(" + columnName + ") LIKE LOWER(?)";
         }
-        query += "product_status = 'present' ORDER BY s.supply_id DESC";
+        query += " ORDER BY product_id";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             if (columnName != null && !columnName.equals("전체") && searchKeyword != null && !searchKeyword.isEmpty()) {
-                stmt.setString(1, searchKeyword);
+                stmt.setString(1, "%" + searchKeyword + "%");
             }
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -119,8 +119,10 @@ public class SupplyDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return products;
     }
+
 
     // 발주 등록 메서드
     public void insertSupply(SupplyVO supplyVO) throws SQLException {

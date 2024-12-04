@@ -36,7 +36,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         // 드롭다운 (컬럼 선택)
-        String[] columns = {"상품명", "카테고리", "신청 상태"};
+        String[] columns = {"상품이름", "분류이름"};
         JComboBox<String> columnComboBox = new JComboBox<>(columns);
         filterPanel.add(columnComboBox);
 
@@ -61,7 +61,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
 
         // 테이블 초기화 (체크박스를 추가)
         tableModel = new DefaultTableModel(new String[]{
-                "신청 ID", "상품 ID", "상품 이름", "카테고리", "신청 시간", "상태"
+                "신청코드", "상품코드", "분류이름", "상품이름", "신청시간", "신청상태"
         }, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -84,14 +84,11 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
                 String column = "";
                 // 선택된 컬럼에 맞게 DB 컬럼명 매핑
                 switch (selectedColumn) {
-                    case "상품명":
+                    case "상품이름":
                         column = "p.product_name";
                         break;
-                    case "카테고리":
+                    case "분류이름":
                         column = "pc.category_name";
-                        break;
-                    case "신청 상태":
-                        column = "ia.apply_status";
                         break;
                 }
                 // 검색된 데이터 로드
@@ -137,8 +134,8 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             Object[] rowData = new Object[6];
             rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
-            rowData[2] = apply.getProductName();
-            rowData[3] = apply.getCategoryName();
+            rowData[2] = apply.getCategoryName();
+            rowData[3] = apply.getProductName();
             rowData[4] = apply.getApplyTime();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 
@@ -157,8 +154,8 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             Object[] rowData = new Object[6];
             rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
-            rowData[2] = apply.getProductName();
-            rowData[3] = apply.getCategoryName();
+            rowData[2] = apply.getCategoryName();
+            rowData[3] = apply.getProductName();
             rowData[4] = apply.getApplyTime();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Process -> String 변환
 
@@ -175,8 +172,8 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
             Object[] rowData = new Object[6];
             rowData[0] = IncomeApplyService.encodeApplyId(apply.getApplyId());
             rowData[1] = ProductService.encodeProductId(apply.getProductId());
-            rowData[2] = apply.getProductName();
-            rowData[3] = apply.getCategoryName();
+            rowData[2] = apply.getCategoryName();
+            rowData[3] = apply.getProductName();
             rowData[4] = apply.getApplyTime();
             rowData[5] = productIncomeService.getApplyStatusAsString(apply);  // Service를 사용해 변환
 

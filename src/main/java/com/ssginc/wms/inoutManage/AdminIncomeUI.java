@@ -29,10 +29,13 @@ public class AdminIncomeUI extends AdminFrame {
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
-                "입고 코드", "상품 코드", "상품 이름", "카테고리 이름", "입고 단가",
+                "입고코드", "상품코드", "분류이름", "상품이름", "입고단가",
                 "입고량", "총 금액", "입고일"
         };
-        JComboBox<String> columnDropdown = new JComboBox<>(columnNames);
+        String[] columnNames2 = {
+                "상품이름", "분류이름"
+        };
+        JComboBox<String> columnDropdown = new JComboBox<>(columnNames2);
         JTextField filterField = new JTextField(15);
         JButton filterButton = new JButton("검색");
         JButton refreshButton = new JButton("새로고침");  // 새로고침 버튼 추가
@@ -76,7 +79,7 @@ public class AdminIncomeUI extends AdminFrame {
         filterButton.addActionListener(e -> {
             String selectedColumn = (String) columnDropdown.getSelectedItem();
             String filterText = filterField.getText().toLowerCase();
-            int columnIndex = Arrays.asList(columnNames).indexOf(selectedColumn);
+            int columnIndex = Arrays.asList(columnNames2).indexOf(selectedColumn);
 
             // Filter the table based on the selected column and filter text
             DefaultTableModel filteredModel = new DefaultTableModel(columnNames, 0);
@@ -84,22 +87,16 @@ public class AdminIncomeUI extends AdminFrame {
                 // Add condition based on selected column
                 String cellValue = "";
                 switch (columnIndex) {
-                    case 0: cellValue = String.valueOf(supply.getSupplyId()); break;
-                    case 1: cellValue = String.valueOf(supply.getProductId()); break;
-                    case 2: cellValue = supply.getProductName(); break;
-                    case 3: cellValue = supply.getCategoryName(); break;
-                    case 4: cellValue = String.valueOf(supply.getSupplyPrice()); break;
-                    case 5: cellValue = String.valueOf(supply.getSupplyAmount()); break;
-                    case 6: cellValue = String.valueOf(supply.getTotalPrice()); break;
-                    case 7: cellValue = supply.getSupplyTime().toString(); break;
+                    case 0: cellValue = supply.getProductName(); break;  // 상품이름
+                    case 1: cellValue = supply.getCategoryName(); break; // 분류이름
                 }
 
                 if (cellValue.toLowerCase().contains(filterText)) {
                     Object[] row = new Object[] {
                             supply.getSupplyId(),
                             supply.getProductId(),
-                            supply.getProductName(),
                             supply.getCategoryName(),
+                            supply.getProductName(),
                             supply.getSupplyPrice(),
                             supply.getSupplyAmount(),
                             supply.getTotalPrice(),
@@ -128,8 +125,8 @@ public class AdminIncomeUI extends AdminFrame {
             Vector<Object> v = new Vector<>();
             v.add(InOutManageService.encodeIncomeId(supply.getSupplyId()));
             v.add(ProductService.encodeProductId(supply.getProductId()));
-            v.add(supply.getProductName());
             v.add(supply.getCategoryName());
+            v.add(supply.getProductName());
             v.add(supply.getSupplyPrice());
             v.add(supply.getSupplyAmount());
             v.add(supply.getTotalPrice());

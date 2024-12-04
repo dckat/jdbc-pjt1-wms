@@ -32,9 +32,8 @@ public class AdminProductUI extends AdminFrame {
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         categoryComboBox = new JComboBox<>(new String[]
-
                 {
-                        "전체", "상품 코드", "상품 이름", "주문 가격", "공급 가격", "재고 수량", "카테고리 코드"
+                        "상품이름", "분류코드"
                 });
         searchField = new
 
@@ -50,7 +49,7 @@ public class AdminProductUI extends AdminFrame {
         tableModel = new
 
                 DefaultTableModel(new String[]{
-                "상품 코드", "상품 이름", "주문 가격", "공급 가격", "재고 수량", "카테고리 코드"
+                "분류코드", "상품코드", "상품이름", "주문단가", "발주단가", "재고수량"
         }, 0);
         productTable = new
 
@@ -77,12 +76,7 @@ public class AdminProductUI extends AdminFrame {
 
         // Event Listeners
         searchButton.addActionListener(e ->
-
-                loadProductData((String) categoryComboBox.
-
-                        getSelectedItem(), searchField.
-
-                        getText()));
+                loadProductData((String) categoryComboBox.getSelectedItem(), searchField.getText()));
 
         addButton.addActionListener(e -> InsertProductFrame(this));
 
@@ -119,24 +113,24 @@ public class AdminProductUI extends AdminFrame {
         tableModel.setRowCount(0);
 
         String columnName = switch (selectedColumn) {
-            case "상품 코드" -> "product_id";
-            case "상품 이름" -> "product_name";
-            case "주문 가격" -> "ord_price";
-            case "공급 가격" -> "supply_price";
-            case "재고 수량" -> "product_amount";
-            case "카테고리 코드" -> "category_id";
+            case "분류코드" -> "category_id";
+            case "상품코드" -> "product_id";
+            case "상품이름" -> "product_name";
+            case "주문단가" -> "ord_price";
+            case "발주단가" -> "supply_price";
+            case "재고수량" -> "product_amount";
             default -> null;
         };
 
         List<ProductVO> products = productDAO.getProducts(columnName, searchKeyword);
         for (ProductVO product : products) {
             tableModel.addRow(new Object[]{
+                    ProductService.encodeCategoryId(product.getCategoryId()),
                     ProductService.encodeProductId(product.getProductId()),
                     product.getProductName(),
                     product.getOrderPrice(),
                     product.getSupplyPrice(),
-                    product.getProductAmount(),
-                    ProductService.encodeCategoryId(product.getCategoryId())
+                    product.getProductAmount()
             });
         }
     }

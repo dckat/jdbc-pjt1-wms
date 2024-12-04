@@ -28,8 +28,18 @@ public class AdminOutgoingUI extends AdminFrame {
 
         // Dropdown for selecting column to filter by
         String[] columnNames = {
-                "상품 이름",
-                "카테고리 이름"
+                "상품이름",
+                "분류이름"
+        };
+
+        String[] columnNames2 = {
+                "출고코드",
+                "상품코드",
+                "분류이름",
+                "상품이름",
+                "출고단가",
+                "출고수량",
+                "출고시간"
         };
         JComboBox<String> columnDropdown = new JComboBox<>(columnNames);
         JTextField filterField = new JTextField(15);
@@ -43,7 +53,7 @@ public class AdminOutgoingUI extends AdminFrame {
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
         ordDAO = new OrdDAO();
-        model = new DefaultTableModel(columnNames, 0);
+        model = new DefaultTableModel(columnNames2, 0);
         table = new JTable(model);
 
         addOutcomeElement();
@@ -75,32 +85,32 @@ public class AdminOutgoingUI extends AdminFrame {
         filterButton.addActionListener(e -> {
             String selectedColumn = (String) columnDropdown.getSelectedItem();
             String filterText = filterField.getText().toLowerCase();
-            int columnIndex = Arrays.asList(columnNames).indexOf(selectedColumn);
+            int columnIndex = Arrays.asList(columnNames2).indexOf(selectedColumn);
 
             // Filter the table based on the selected column and filter text
-            DefaultTableModel filteredModel = new DefaultTableModel(columnNames, 0);
+            DefaultTableModel filteredModel = new DefaultTableModel(columnNames2, 0);
             for (OutgoingProductVO ord : ordList) {
                 // Add condition based on selected column
                 String cellValue = "";
                 switch (columnIndex) {
                     case 0: cellValue = String.valueOf(ord.getOrdId()); break;
-                    case 1: cellValue = String.valueOf(ord.getOrdAmount()); break;
-                    case 2: cellValue = String.valueOf(ord.getProductId()); break;
-                    case 3: cellValue = ord.getOrdCompleteTime().toString(); break;
-                    case 4: cellValue = ord.getProductName(); break;
-                    case 5: cellValue = String.valueOf(ord.getOrdPrice()); break;
-                    case 6: cellValue = ord.getCategoryName(); break;
+                    case 1: cellValue = String.valueOf(ord.getProductId()); break;
+                    case 2: cellValue = ord.getCategoryName(); break;
+                    case 3: cellValue = ord.getProductName(); break;
+                    case 4: cellValue = String.valueOf(ord.getOrdPrice()); break;
+                    case 5: cellValue = String.valueOf(ord.getOrdAmount()); break;
+                    case 6: cellValue = ord.getOrdCompleteTime().toString(); break;
                 }
 
                 if (cellValue.toLowerCase().contains(filterText)) {
                     Object[] row = new Object[] {
                             ord.getOrdId(),
-                            ord.getOrdAmount(),
                             ord.getProductId(),
-                            ord.getOrdCompleteTime(),
+                            ord.getCategoryName(),
                             ord.getProductName(),
                             ord.getOrdPrice(),
-                            ord.getCategoryName()
+                            ord.getOrdAmount(),
+                            ord.getOrdCompleteTime(),
                     };
                     filteredModel.addRow(row);
                 }
@@ -124,12 +134,12 @@ public class AdminOutgoingUI extends AdminFrame {
         for (OutgoingProductVO ord : ordList) {
             Vector<Object> v = new Vector<>();
             v.add(InOutManageService.encodeOutcomeId(ord.getOrdId()));
-            v.add(ord.getOrdAmount());
             v.add(ProductService.encodeProductId(ord.getProductId()));
-            v.add(ord.getOrdCompleteTime());
+            v.add(ord.getCategoryName());
             v.add(ord.getProductName());
             v.add(ord.getOrdPrice());
-            v.add(ord.getCategoryName());
+            v.add(ord.getOrdAmount());
+            v.add(ord.getOrdCompleteTime());
             model.addRow(v);
         }
     }
