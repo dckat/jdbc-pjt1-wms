@@ -191,7 +191,7 @@ public class CustomerIncomeApplyUI extends CustomerFrame {
         List<Integer> applyIdsToDelete = new ArrayList<>();
         for (int row : selectedRows) {
             int applyId = DecodeId.decodeId(tableModel.getValueAt(row, 0).toString()); // 신청 ID 가져오기
-            String status = (String) tableModel.getValueAt(row, 6);  // 상태 가져오기
+            String status = (String) tableModel.getValueAt(row, 5);  // 상태 가져오기
 
             if ("completed".equals(status)) {
                 // "completed" 상태인 경우 삭제 불가 메시지 표시

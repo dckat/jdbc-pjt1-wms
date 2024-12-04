@@ -3,6 +3,7 @@ package com.ssginc.wms.supply;
 
 import com.ssginc.wms.frame.AdminFrame;
 import com.ssginc.wms.product.ProductService;
+import com.ssginc.wms.util.DecodeId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -150,7 +151,7 @@ public class SupplyUI extends AdminFrame {
         }
 
         // 선택된 행에서 상품 ID를 가져옵니다.
-        int productId = (int) tableModel.getValueAt(selectedRow, 2); // 상품 ID가 있는 열의 인덱스를 확인하세요.
+        int productId = DecodeId.decodeId(tableModel.getValueAt(selectedRow, 2).toString()); // 상품 ID가 있는 열의 인덱스를 확인하세요.
         String productName = (String) tableModel.getValueAt(selectedRow, 3); // 상품 이름
 
         // 사용자에게 발주 수량을 입력받습니다.
