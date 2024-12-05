@@ -88,8 +88,9 @@ public class AdminProductUI extends AdminFrame {
             }
 
             // 선택된 row에서 productId 가져오기
-            int productId = DecodeId.decodeId(tableModel.getValueAt(selectedRow, 0).toString());
+            int productId = DecodeId.decodeId(tableModel.getValueAt(selectedRow, 1).toString());
             ProductVO selectedProduct = productDAO.getProductById(productId);
+
 
             if (selectedProduct == null) {
                 JOptionPane.showMessageDialog(this, "선택한 상품 정보를 불러올 수 없습니다.");

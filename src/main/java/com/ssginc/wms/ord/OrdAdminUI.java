@@ -96,7 +96,13 @@ public class OrdAdminUI extends AdminFrame {
                 JOptionPane.showMessageDialog(this, "재고량이 부족하여 승인할 수 없습니다.");
                 return;
             }
-            ordDao.updateOrdStatus(ordIds, ordAmounts);
+
+            if (ordDao.updateOrdStatus(ordIds, ordAmounts) != null) {
+                JOptionPane.showMessageDialog(this, "주문 승인이 완료되었습니다.");
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "승인 중 오류가 발생하였습니다.");
+            }
 
             this.dispose();
             new OrdAdminUI(id);

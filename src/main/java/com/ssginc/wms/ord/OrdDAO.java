@@ -207,7 +207,7 @@ public class OrdDAO {
         return 0;
     }
 
-    public void updateOrdStatus(int[] ordIds, int[] ordAmounts) {
+    public int[] updateOrdStatus(int[] ordIds, int[] ordAmounts) {
         try {
             Connection con = dataSource.getConnection();
             try(PreparedStatement ps = con.prepareStatement("UPDATE ord o INNER JOIN product p " +
@@ -220,8 +220,9 @@ public class OrdDAO {
                     ps.setInt(2, ordIds[i]);
                     ps.addBatch();
                 }
-                ps.executeBatch();
+                int[] rows = ps.executeBatch();
                 con.commit();
+                return rows;
             } catch (SQLException e) {
                 try {
                     con.rollback();
@@ -233,6 +234,7 @@ public class OrdDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     // 출고 현황 조회 메서드

@@ -1,5 +1,7 @@
 package com.ssginc.wms.product;
 
+import com.ssginc.wms.util.DecodeId;
+
 import javax.swing.table.TableModel;
 
 public class ProductService {
@@ -7,7 +9,7 @@ public class ProductService {
         int[] result = new int[rows.length];
 
         for (int i = 0; i < rows.length; i++) {
-            result[i] = Integer.parseInt(String.valueOf(model.getValueAt(rows[i], 1)));
+            result[i] = DecodeId.decodeId(model.getValueAt(rows[i], 1).toString());
         }
 
         return result;

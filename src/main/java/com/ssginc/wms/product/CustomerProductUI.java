@@ -73,56 +73,52 @@ public class CustomerProductUI extends CustomerFrame {
         orderButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow != -1) {
-                while (true) {
-                    int productId = DecodeId.decodeId(productTable.getValueAt(selectedRow, 0).toString());
-                    String productName = tableModel.getValueAt(selectedRow, 1).toString();
-                    String message = "상품명: " + productName + "\n 주문 수량을 입력하세요:";
-                    String input = JOptionPane.showInputDialog(this, message,
-                            "주문 하기", JOptionPane.QUESTION_MESSAGE);
+                int productId = DecodeId.decodeId(productTable.getValueAt(selectedRow, 2).toString());
+                String productName = tableModel.getValueAt(selectedRow, 3).toString();
+                String message = "상품명: " + productName + "\n 주문 수량을 입력하세요:";
+                String input = JOptionPane.showInputDialog(this, message,
+                        "주문 하기", JOptionPane.QUESTION_MESSAGE);
 
-                    if (input == null || input.trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "주문 수량을 입력해주세요.");
-                    }
-                    else {
-                        try {
-                            int amount = Integer.parseInt(input);
-                            int inventoryAmount = Integer.parseInt(tableModel.getValueAt(selectedRow, 5).toString());
+                if (input == null || input.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "주문 수량을 입력해주세요.");
+                }
+                else {
+                    try {
+                        int amount = Integer.parseInt(input);
+                        int inventoryAmount = Integer.parseInt(tableModel.getValueAt(selectedRow, 5).toString());
 
-                            if (amount <= 0) {
-                                JOptionPane.showMessageDialog(this, "0 이상의 숫자를 입력해주세요.");
+                        if (amount <= 0) {
+                            JOptionPane.showMessageDialog(this, "0 이상의 숫자를 입력해주세요.");
+                        }
+                        else {
+                            if (amount < inventoryAmount) {
+                                OrdDAO ordDao = new OrdDAO();
+                                OrdVO ordVo = new OrdVO();
+                                ordVo.setProductId(productId);
+                                ordVo.setOrderAmount(amount);
+                                ordVo.setOrderTime(LocalDateTime.now());
+                                ordVo.setUserId(id);
+                                ordDao.insertOrder(ordVo);
+                                JOptionPane.showMessageDialog(this, "주문이 접수되었습니다.");
                             }
                             else {
-                                if (amount < inventoryAmount) {
-                                    OrdDAO ordDao = new OrdDAO();
-                                    OrdVO ordVo = new OrdVO();
-                                    ordVo.setProductId(productId);
-                                    ordVo.setOrderAmount(amount);
-                                    ordVo.setOrderTime(LocalDateTime.now());
-                                    ordVo.setUserId(id);
-                                    ordDao.insertOrder(ordVo);
-                                    JOptionPane.showMessageDialog(this, "주문이 접수되었습니다.");
-                                }
-                                else {
-                                    JOptionPane.showMessageDialog(this, "재고량이 부족하여 입고신청을 진행합니다.");
-                                    // 입고 신청 내역 insert 작성 필요
-                                    IncomeApplyDAO incomeApplyDAO = new IncomeApplyDAO();
-                                    IncomeApplyVO incomeApplyVO = new IncomeApplyVO();
+                                JOptionPane.showMessageDialog(this, "재고량이 부족하여 입고신청을 진행합니다.");
+                                // 입고 신청 내역 insert 작성 필요
+                                IncomeApplyDAO incomeApplyDAO = new IncomeApplyDAO();
+                                IncomeApplyVO incomeApplyVO = new IncomeApplyVO();
 
-                                    incomeApplyVO.setProductId(productId); // 선택된 상품 ID
-                                    incomeApplyVO.setUserId(id);
-                                    incomeApplyVO.setApplyTime(LocalDateTime.now()); // 현재 시간
+                                incomeApplyVO.setProductId(productId); // 선택된 상품 ID
+                                incomeApplyVO.setUserId(id);
+                                incomeApplyVO.setApplyTime(LocalDateTime.now()); // 현재 시간
 
-                                    // 입고 신청 데이터를 삽입
-                                    incomeApplyDAO.insertIncomeApply(incomeApplyVO);
+                                // 입고 신청 데이터를 삽입
+                                incomeApplyDAO.insertIncomeApply(incomeApplyVO);
 
-                                    JOptionPane.showMessageDialog(this, "입고 신청이 완료되었습니다.");
-                                    break;
-                                }
-                                break;
+                                JOptionPane.showMessageDialog(this, "입고 신청이 완료되었습니다.");
                             }
-                        } catch (NumberFormatException nfe) {
-                            JOptionPane.showMessageDialog(this, "유효하지 않은 숫자입니다.");
                         }
+                    } catch (NumberFormatException nfe) {
+                        JOptionPane.showMessageDialog(this, "유효하지 않은 숫자입니다.");
                     }
                 }
             }
